@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="ZENTRIX 2026 Admin Login — The Kavery Engineering College (Autonomous)">
+  <title>Admin Login | ZENTRIX 2026</title>
+
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2fe' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>" type="image/svg+xml">
+
+  <!-- Google Fonts & Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/register.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Supabase JS Client v2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="ambient-glow glow-1" style="top:10%;left:70%;"></div>
+  <div class="ambient-glow glow-2" style="top:60%;left:15%;"></div>
+
+  <!-- Navbar -->
+  <header class="header scrolled">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.png" alt="Kavery Emblem" class="brand-logo"
+          onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300f2fe\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
+        <div class="brand-info">
+          <h1 class="gradient-gold">THE KAVERY ENGINEERING COLLEGE</h1>
+          <span>(AUTONOMOUS) &bull; MECHERI, SALEM</span>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle Mobile Navigation">☰</button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="index.html#events">EVENTS</a></li>
+        <li><a href="register.html">STUDENT REGISTER</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Login Wrapper -->
+  <main class="login-wrapper">
+    <div class="login-card glass-card" data-reveal="zoom">
+
+      <div class="login-header">
+        <div class="login-badge">ORGANIZERS &bull; ADMIN ONLY</div>
+        <h2 class="login-heading">
+          ZENTRIX <span class="gradient-text">2026</span>
+        </h2>
+        <h3 class="login-subheading">ADMIN LOGIN</h3>
+        <p class="login-college">The Kavery Engineering College (Autonomous)</p>
+      </div>
+
+      <!-- Alert Message Box -->
+      <div id="loginAlert" role="alert" aria-live="polite"></div>
+
+      <!-- Admin Login Form -->
+      <form id="adminLoginForm" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="adminEmail">Email</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input
+              type="email"
+              id="adminEmail"
+              class="form-control"
+              placeholder="admin@kavery.edu.in"
+              autocomplete="email"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input
+              type="password"
+              id="adminPassword"
+              class="form-control"
+              placeholder="••••••••••••"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-lg login-btn">
+          <span class="btn-text">LOGIN</span>
+          <div class="btn-spinner" style="display:none;" aria-hidden="true"></div>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p><a href="index.html">&larr; Return to Public Portal</a></p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 The Kavery Engineering College (Autonomous) &bull; ZENTRIX 2026 Administrative Access</p>
+    </div>
+  </footer>
+
+  <!-- Core Scripts in strict dependency order -->
+  <script src="js/config.js?v=supabase-url-1"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/animations.js" defer></script>
+</body>
+</html>

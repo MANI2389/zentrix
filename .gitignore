@@ -1,0 +1,36 @@
+# ============================================================
+# SYMPOSIUM 2K26 - Git Ignore
+# ============================================================
+
+# Environment variables, secrets, and credentials
+.env
+.env.local
+.env.*.local
+*.env
+service_role
+*.pem
+*.key
+*.cert
+credentials.json
+secrets.json
+
+# Local runtime & system cache files
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# IDE, Editor & Workspace files
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.settings/
+
+# Vercel & build cache artifacts
+.vercel/
+node_modules/
+dist/
+build/

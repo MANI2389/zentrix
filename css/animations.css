@@ -1,0 +1,355 @@
+/**
+ * ZENTRIX 2026 — Premium Futuristic Animations
+ * The Kavery Engineering College (Autonomous)
+ * Lightweight CSS & Vanilla JS animation system
+ * Designed with 60fps performance & prefers-reduced-motion compliance
+ */
+
+/* ==========================================================================
+   3. ANIMATED GRADIENT HEADINGS & ACCENTS
+   ========================================================================== */
+.gradient-text,
+.hero-title.gradient-text {
+  background-size: 250% 250%;
+  animation: gradientFlow 8s ease infinite;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hero Tagline Glowing Accent */
+.hero-tagline {
+  position: relative;
+  letter-spacing: 0.15em;
+  transition: text-shadow 0.3s ease;
+}
+
+/* Section Title Neon Accent Line */
+.section-header .section-title::after {
+  content: '';
+  display: block;
+  width: 54px;
+  height: 3px;
+  margin: 0.65rem auto 0;
+  background: linear-gradient(90deg, var(--accent-cyan, #00f2fe), var(--accent-purple, #9b51e0), var(--accent-gold, #ffd700));
+  border-radius: 2px;
+  animation: neonUnderline 3s ease-in-out infinite;
+}
+
+@keyframes neonUnderline {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(0, 242, 254, 0.55), 0 0 16px rgba(155, 81, 224, 0.3);
+    opacity: 0.85;
+    transform: scaleX(1);
+  }
+
+  50% {
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.9), 0 0 24px rgba(155, 81, 224, 0.6);
+    opacity: 1;
+    transform: scaleX(1.15);
+  }
+}
+
+/* Edition Badge Neon Glow */
+.hero-edition-badge {
+  animation: badgePulse 3.5s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+    border-color: rgba(0, 242, 254, 0.35);
+  }
+
+  50% {
+    box-shadow: 0 0 22px rgba(0, 242, 254, 0.55);
+    border-color: rgba(0, 242, 254, 0.7);
+  }
+}
+
+/* ==========================================================================
+   4. CARD HOVER MICRO-INTERACTIONS & NEON EDGES
+   ========================================================================== */
+.event-8-card {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.event-8-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.35), transparent 40%, rgba(155, 81, 224, 0.3));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.event-8-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(0, 242, 254, 0.55);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(0, 242, 254, 0.22);
+}
+
+.event-8-card:hover::before {
+  opacity: 1;
+}
+
+.event-8-card:hover .event-icon-box {
+  transform: scale(1.08) rotate(3deg);
+  box-shadow: 0 0 22px rgba(0, 242, 254, 0.45);
+  background: rgba(0, 242, 254, 0.16);
+  border-color: rgba(0, 242, 254, 0.5);
+}
+
+.event-8-card .event-icon-box {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.event-8-card:hover .event-number {
+  color: rgba(0, 242, 254, 0.35);
+  text-shadow: 0 0 12px rgba(0, 242, 254, 0.5);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Info Cards Hover */
+.info-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 242, 254, 0.45);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 242, 254, 0.2);
+}
+
+/* Why Participate Cards Hover */
+.why-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 215, 0, 0.45);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.why-card .why-icon {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-card:hover .why-icon {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+/* Contact Cards Hover */
+.contact-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(155, 81, 224, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(155, 81, 224, 0.22);
+}
+
+/* Focus list chips hover in About box */
+.focus-item {
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.focus-item:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 242, 254, 0.12);
+  border-color: rgba(0, 242, 254, 0.4);
+}
+
+/* Department badge hover */
+.dept-badge {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dept-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 242, 254, 0.25);
+}
+
+/* ==========================================================================
+   5. BUTTON SHIMMER & HOVER GLOW
+   ========================================================================== */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.25s ease;
+}
+
+/* Shimmer shine sweep */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(105deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent 80%);
+  transform: skewX(-25deg);
+  transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn {
+  pointer-events: auto;
+}
+
+.btn:hover::after {
+  left: 150%;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 26px rgba(0, 242, 254, 0.55),
+    0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.btn-gold:hover {
+  box-shadow: 0 0 26px rgba(255, 215, 0, 0.55),
+    0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 0 22px rgba(155, 81, 224, 0.45),
+    0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   6. METRIC CARDS HOVER (ADMIN DASHBOARD)
+   ========================================================================== */
+.metric-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 242, 254, 0.45);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 242, 254, 0.18);
+}
+
+/* ==========================================================================
+   7. FLOATING PARTICLES CANVAS CANVAS STYLING
+   ========================================================================== */
+#sym-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.38;
+}
+
+/* Make sure contents stay above canvas */
+.ambient-glow,
+.header,
+.hero,
+.section,
+.footer,
+.reg-container,
+.login-container,
+.admin-main,
+.success-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep decorative layers out of document flow so the homepage opens at the hero. */
+.ambient-glow {
+  position: fixed !important;
+}
+
+.header {
+  position: fixed !important;
+  z-index: 1000 !important;
+}
+
+/* ==========================================================================
+   8. PREFERS-REDUCED-MOTION ACCESSIBILITY
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    animation: none !important;
+  }
+
+  [data-reveal],
+  [data-reveal="zoom"],
+  [data-reveal="stagger"]>* {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .btn::after {
+    display: none !important;
+  }
+
+  .gradient-text,
+  .hero-title.gradient-text,
+  .hero-edition-badge,
+  .section-header .section-title::after {
+    animation: none !important;
+  }
+
+  #sym-particles {
+    display: none !important;
+  }
+}

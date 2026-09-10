@@ -1,0 +1,556 @@
+/* ====================================================================
+  ZENTRIX 2026 - Registration Confirmation & Receipt CSS
+   The Kavery Engineering College (Autonomous)
+   Phase 1: Internal College Symposium
+   ==================================================================== */
+
+.success-page {
+  min-height: calc(100vh - 160px);
+  padding: 7.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  z-index: 2;
+}
+
+/* ──────────────────────────────────────────────────
+   Loading State
+   ────────────────────────────────────────────────── */
+.success-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 5rem 2rem;
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+}
+
+.loading-ring {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(0, 242, 254, 0.15);
+  border-top-color: var(--accent-cyan);
+  border-right-color: var(--accent-purple);
+  border-radius: 50%;
+  animation: spin 0.9s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ──────────────────────────────────────────────────
+   Invalid State (No Params / Fake Direct Hit)
+   ────────────────────────────────────────────────── */
+.invalid-state {
+  max-width: 520px;
+  width: 100%;
+  margin: 2rem auto;
+  background: rgba(18, 21, 38, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 71, 87, 0.35);
+  box-shadow: 0 0 35px rgba(255, 71, 87, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2rem;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.invalid-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.invalid-state h2 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: #ff6b81;
+  margin-bottom: 0.75rem;
+}
+
+.invalid-state p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.invalid-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ──────────────────────────────────────────────────
+   Success Content Container
+   ────────────────────────────────────────────────── */
+.success-content {
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   Hero Banner
+   ────────────────────────────────────────────────── */
+.success-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.success-icon-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.04) 70%);
+  border: 2px solid var(--accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.35);
+  animation: pulseGreen 2.5s infinite;
+}
+
+.success-icon-svg {
+  width: 40px;
+  height: 40px;
+  color: var(--accent-green);
+}
+
+@keyframes pulseGreen {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(0, 255, 136, 0.6);
+  }
+}
+
+.success-congrats {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: var(--accent-green);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.success-title {
+  font-size: 2.2rem;
+  font-family: var(--font-heading);
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.success-sub {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* ──────────────────────────────────────────────────
+   The Confirmation Card (Pass)
+   ────────────────────────────────────────────────── */
+.confirm-card {
+  width: 100%;
+  background: linear-gradient(145deg, rgba(16, 20, 38, 0.95) 0%, rgba(8, 10, 20, 0.98) 100%);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(0, 242, 254, 0.12);
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 2.25rem;
+}
+
+/* Top Neon Gradient Accent Bar */
+.confirm-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple), var(--accent-magenta));
+}
+
+/* ──────────────────────────────────────────────────
+   Card Header
+   ────────────────────────────────────────────────── */
+.card-header-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2.25rem 1.5rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.015);
+  gap: 1.5rem;
+}
+
+.card-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.card-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.3));
+}
+
+.card-college {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  letter-spacing: 0.5px;
+  line-height: 1.25;
+}
+
+.card-event-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}
+
+.card-phase-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.12);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  padding: 0.15rem 0.6rem;
+  border-radius: 4px;
+  margin-top: 0.35rem;
+}
+
+/* Card ID Block (Right) */
+.card-id-block {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.card-id-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.card-id-value {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+}
+
+.card-status-chip {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  padding: 0.2rem 0.75rem;
+  border-radius: 50px;
+  margin-top: 0.4rem;
+}
+
+/* ──────────────────────────────────────────────────
+   Card Body & Details Grid
+   ────────────────────────────────────────────────── */
+.card-body {
+  padding: 2rem 2.25rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detail-span-2 {
+  grid-column: span 2;
+}
+
+.detail-lbl {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-val {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.detail-val.highlight {
+  font-size: 1.35rem;
+  font-family: var(--font-heading);
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.detail-val.event-val {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.detail-val.status-val {
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+.detail-val.gold-val {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+/* ──────────────────────────────────────────────────
+   Card Footer Notice
+   ────────────────────────────────────────────────── */
+.card-footer-notice {
+  background: rgba(0, 242, 254, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.1rem 2.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-footer-notice svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-cyan);
+  flex-shrink: 0;
+}
+
+.card-footer-notice strong {
+  color: var(--text-primary);
+}
+
+/* ──────────────────────────────────────────────────
+   Action Buttons
+   ────────────────────────────────────────────────── */
+.success-actions {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.success-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.success-actions .btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ──────────────────────────────────────────────────
+   Responsive Adjustments
+   ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .success-page {
+    padding-top: 6.5rem;
+  }
+
+  .card-header-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+
+  .card-id-block {
+    text-align: left;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-id-label {
+    margin-bottom: 0;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .detail-span-2 {
+    grid-column: span 1;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+
+  .success-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .success-page {
+    padding: 6rem 1rem 3rem;
+  }
+
+  .card-header-strip {
+    padding: 1.25rem 1rem;
+  }
+
+  .card-body {
+    padding: 1.25rem 1rem;
+  }
+
+  .card-footer-notice {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .success-title {
+    font-size: 1.75rem;
+  }
+
+  .card-id-value {
+    font-size: 1.1rem;
+  }
+
+  .success-actions .btn {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.88rem;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   Print Styles (Clean Paper Receipt)
+   ────────────────────────────────────────────────── */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .ambient-glow,
+  .header,
+  .footer,
+  .success-actions,
+  .success-hero,
+  .success-loading,
+  .invalid-state {
+    display: none !important;
+  }
+
+  .success-page {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  .confirm-card {
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    color: #000000 !important;
+    border-radius: 8px !important;
+  }
+
+  .confirm-card::before {
+    display: none !important;
+  }
+
+  .card-header-strip {
+    background: #f8fafc !important;
+    border-bottom: 2px solid #000000 !important;
+  }
+
+  .card-college {
+    color: #000000 !important;
+  }
+
+  .card-id-value,
+  .detail-val,
+  .detail-val.highlight,
+  .detail-val.event-val,
+  .detail-val.gold-val {
+    color: #000000 !important;
+    text-shadow: none !important;
+  }
+
+  .card-status-chip,
+  .detail-val.status-val {
+    color: #166534 !important;
+    background: #dcfce7 !important;
+    border-color: #166534 !important;
+  }
+
+  .detail-lbl {
+    color: #475569 !important;
+  }
+
+  .card-footer-notice {
+    background: #f8fafc !important;
+    border-top: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+  }
+}

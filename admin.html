@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="ZENTRIX 2026 Admin Dashboard — The Kavery Engineering College (Autonomous)">
+  <title>Admin Dashboard | ZENTRIX 2026</title>
+
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2fe' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>" type="image/svg+xml">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/register.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Supabase JS Client v2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="admin-body">
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="ambient-glow glow-1" style="top:5%;left:75%;"></div>
+  <div class="ambient-glow glow-2" style="top:55%;left:5%;"></div>
+
+  <!-- ==================================================
+       HEADER
+       ================================================== -->
+  <header class="header scrolled admin-navbar">
+    <div class="container nav-container">
+      <div class="admin-brand-group">
+        <a href="admin.html" class="nav-brand">
+          <img src="assets/logo.png" alt="Kavery Emblem" class="brand-logo"
+            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300f2fe\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
+          <div class="brand-info">
+            <h1 class="gradient-gold">ZENTRIX 2026</h1>
+            <span>ADMIN DASHBOARD &bull; THE KAVERY ENGINEERING COLLEGE</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="admin-user-bar">
+        <div class="admin-user-meta" id="adminUserMeta">
+          <span class="admin-label">LOGGED IN AS:</span>
+          <span class="admin-email-badge" id="adminEmailDisplay">Verifying session&hellip;</span>
+        </div>
+
+        <a href="index.html" target="_blank" class="btn btn-outline btn-sm" title="View student public portal">
+          Public Site ↗
+        </a>
+
+        <button onclick="adminSignOut()" class="btn btn-danger btn-sm" id="logoutBtn">
+          LOGOUT
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================================================
+       MAIN CONTENT
+       ================================================== -->
+  <main class="admin-container container" id="adminDashboard">
+
+    <!-- Top Command Strip -->
+    <div class="admin-header" data-reveal>
+      <div class="admin-title-area">
+        <div class="admin-breadcrumb">THE KAVERY ENGINEERING COLLEGE (AUTONOMOUS) &bull; 24 SEPTEMBER 2026</div>
+        <h2>ZENTRIX <span class="gradient-text">2026</span> &bull; ADMIN DASHBOARD</h2>
+        <p>Live registration analytics, participant verification, and event management</p>
+      </div>
+
+      <div class="admin-top-actions">
+        <button id="refreshBtn" class="btn btn-outline" title="Reload live registrations from Supabase">
+          <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          <span id="refreshBtnText">REFRESH DATA</span>
+        </button>
+
+        <button id="exportCsvBtn" class="btn btn-gold" title="Export currently filtered registrations to CSV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          EXPORT CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- Error / Status Notice Banner -->
+    <div id="adminNotice" class="admin-notice" style="display:none;" role="alert"></div>
+
+    <!-- ==================================================
+         STATISTICS CARDS (All 9 Required Cards)
+         ================================================== -->
+    <section class="stats-section" aria-label="ZENTRIX 2026 Statistics">
+      <div class="stats-header">
+        <h3 class="section-sub-title">EVENT REGISTRATION TELEMETRY</h3>
+        <span class="stats-update-pill" id="statsTimestamp">Live Supabase Sync</span>
+      </div>
+
+      <div class="metrics-grid" data-reveal="stagger">
+        <!-- 1. TOTAL REGISTRATIONS -->
+        <div class="metric-card card-total">
+          <span class="metric-label">TOTAL REGISTRATIONS</span>
+          <span class="metric-value" id="statTotal">0</span>
+          <span class="metric-sub">Technical + Non-Technical</span>
+        </div>
+
+        <!-- 2. STARTUP SPARK -->
+        <div class="metric-card card-event">
+          <span class="metric-label">STARTUP SPARK</span>
+          <span class="metric-value" id="statStartupSpark">0</span>
+          <span class="metric-sub">Technical Pitching</span>
+        </div>
+
+        <!-- 3. PROJECT EXPO -->
+        <div class="metric-card card-event">
+          <span class="metric-label">PROJECT EXPO</span>
+          <span class="metric-value" id="statProjectExpo">0</span>
+          <span class="metric-sub">Hardware &amp; Software</span>
+        </div>
+
+        <!-- 4. BUG HUNTERS -->
+        <div class="metric-card card-event">
+          <span class="metric-label">BUG HUNTERS</span>
+          <span class="metric-value" id="statBugHunters">0</span>
+          <span class="metric-sub">Code Debugging</span>
+        </div>
+
+        <!-- 5. PROMPT MASTER -->
+        <div class="metric-card card-event">
+          <span class="metric-label">PROMPT MASTER</span>
+          <span class="metric-value" id="statPromptMaster">0</span>
+          <span class="metric-sub">Generative AI Challenge</span>
+        </div>
+
+        <!-- 6. CINESPARK -->
+        <div class="metric-card card-event">
+          <span class="metric-label">CINESPARK</span>
+          <span class="metric-value" id="statCinespark">0</span>
+          <span class="metric-sub">Short Film Contest</span>
+        </div>
+
+        <!-- 7. MEME CREATION -->
+        <div class="metric-card card-event">
+          <span class="metric-label">MEME CREATION</span>
+          <span class="metric-value" id="statMemeCreation">0</span>
+          <span class="metric-sub">Digital Humor Challenge</span>
+        </div>
+
+        <!-- 8. LOGO HUNTING -->
+        <div class="metric-card card-event">
+          <span class="metric-label">LOGO HUNTING</span>
+          <span class="metric-value" id="statLogoHunting">0</span>
+          <span class="metric-sub">Brand Mystery Puzzle</span>
+        </div>
+
+        <!-- 9. VIDEO QUIZ -->
+        <div class="metric-card card-event">
+          <span class="metric-label">VIDEO QUIZ</span>
+          <span class="metric-value" id="statVideoQuiz">0</span>
+          <span class="metric-sub">Audio-Visual Trivia</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================
+         SEARCH & FILTERS TOOLBAR
+         ================================================== -->
+    <section class="admin-toolbar glass-card" aria-label="Search and Filter Controls">
+      <!-- Search Input -->
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          id="adminSearchInput"
+          class="form-control search-input"
+          placeholder="Search by Student Name, Register Number, Email..."
+          aria-label="Search registrations"
+        >
+        <button type="button" id="clearSearchBtn" class="clear-search-btn" style="display:none;" title="Clear search">✕</button>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="filter-controls">
+        <!-- Event Filter -->
+        <div class="filter-group">
+          <label for="adminEventFilter" class="filter-lbl">Event</label>
+          <select id="adminEventFilter" class="form-control filter-select">
+            <option value="ALL">All Events</option>
+            <option value="startup-spark">STARTUP SPARK</option>
+            <option value="project-expo">PROJECT EXPO</option>
+            <option value="bug-hunters">BUG HUNTERS</option>
+            <option value="prompt-master">PROMPT MASTER</option>
+            <option value="cinespark">CINESPARK</option>
+            <option value="meme-creation">MEME CREATION</option>
+            <option value="logo-hunting">LOGO HUNTING</option>
+            <option value="video-quiz">VIDEO QUIZ</option>
+          </select>
+        </div>
+
+        <!-- Department Filter -->
+        <div class="filter-group">
+          <label for="adminDeptFilter" class="filter-lbl">Department</label>
+          <select id="adminDeptFilter" class="form-control filter-select">
+            <option value="ALL">All Departments</option>
+            <option value="CSE">CSE</option>
+            <option value="IT">IT</option>
+            <option value="AIDS">AI &amp; DS</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Year Filter -->
+        <div class="filter-group">
+          <label for="adminYearFilter" class="filter-lbl">Year</label>
+          <select id="adminYearFilter" class="form-control filter-select">
+            <option value="ALL">All Years</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="Final Year">Final Year</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="filter-group">
+          <label for="adminStatusFilter" class="filter-lbl">Status</label>
+          <select id="adminStatusFilter" class="form-control filter-select">
+            <option value="ALL">All Statuses</option>
+            <option value="registered">Registered</option>
+            <option value="attended">Attended</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="disqualified">Disqualified</option>
+          </select>
+        </div>
+
+        <button type="button" id="resetFiltersBtn" class="btn btn-outline btn-sm reset-btn" title="Reset all filters">
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <!-- Table Meta Bar -->
+    <div class="table-info-bar">
+      <div class="records-count">
+        Showing <strong id="recordCount" style="color:var(--accent-cyan);">0</strong> of <span id="totalRecordCount">0</span> registrations
+      </div>
+      <div class="table-hint">
+        💡 Click any row to view complete student registration details
+      </div>
+    </div>
+
+    <!-- ==================================================
+         REGISTRATION TABLE (All 12 Columns, Responsive)
+         ================================================== -->
+    <div class="table-responsive glass-card">
+      <table class="admin-table" id="registrationsTable">
+        <thead>
+          <tr>
+            <th>Registration ID</th>
+            <th>Name</th>
+            <th>Register Number</th>
+            <th>Department</th>
+            <th>Year</th>
+            <th>Section</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Event</th>
+            <th>Team</th>
+            <th>Status</th>
+            <th>Registration Date</th>
+          </tr>
+        </thead>
+        <tbody id="regTableBody">
+          <tr>
+            <td colspan="12" class="text-center py-4">
+              <div class="loading-ring" style="margin: 1.5rem auto 1rem;"></div>
+              <p style="color:var(--text-secondary);">Querying Supabase registrations&hellip;</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- ==================================================
+       DETAIL VIEW MODAL
+       ================================================== -->
+  <div class="modal-backdrop" id="detailModalBackdrop" style="display:none;" aria-hidden="true">
+    <div class="modal-dialog glass-card" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+
+      <!-- Modal Header Strip -->
+      <div class="modal-header">
+        <div>
+          <div class="modal-subtitle">STUDENT REGISTRATION DETAIL</div>
+          <h3 class="modal-title" id="modalStudentName">—</h3>
+        </div>
+        <button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">✕</button>
+      </div>
+
+      <!-- Modal Body Grid -->
+      <div class="modal-body">
+        <div class="modal-id-row">
+          <div>
+            <span class="modal-field-lbl">REGISTRATION ID</span>
+            <div class="modal-reg-id" id="modalRegId">—</div>
+          </div>
+          <div>
+            <span class="modal-field-lbl">STATUS</span>
+            <div id="modalStatusChip" class="status-chip">—</div>
+          </div>
+        </div>
+
+        <div class="modal-grid">
+          <div class="modal-item">
+            <span class="modal-field-lbl">Register Number</span>
+            <span class="modal-field-val" id="modalRegisterNo">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Department</span>
+            <span class="modal-field-val" id="modalDept">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Year of Study</span>
+            <span class="modal-field-val" id="modalYear">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Section</span>
+            <span class="modal-field-val" id="modalSection">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">College Email</span>
+            <a href="#" class="modal-field-val link-email" id="modalEmail">—</a>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Mobile Phone</span>
+            <a href="#" class="modal-field-val link-phone" id="modalPhone">—</a>
+          </div>
+
+          <div class="modal-item modal-span-2">
+            <span class="modal-field-lbl">Selected Event</span>
+            <span class="modal-field-val highlight-event" id="modalEventName">—</span>
+          </div>
+
+          <div class="modal-item modal-span-2" id="modalTeamBox">
+            <span class="modal-field-lbl">Team Name &amp; Members</span>
+            <div class="modal-field-val" id="modalTeamDetails">—</div>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Registration Type</span>
+            <span class="modal-field-val" id="modalRegType">Internal</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Registration Timestamp</span>
+            <span class="modal-field-val" id="modalRegDate">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer & Actions -->
+      <div class="modal-footer">
+        <div class="modal-status-actions" id="modalStatusActions">
+          <!-- Populated dynamically: Mark Attended, Cancel, etc. -->
+        </div>
+        <button type="button" class="btn btn-outline" id="modalDismissBtn">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 The Kavery Engineering College (Autonomous) &bull; ZENTRIX 2026 Administrative Command Center</p>
+    </div>
+  </footer>
+
+  <!-- Core Scripts in strict dependency order -->
+  <script src="js/config.js?v=supabase-url-1"></script>
+  <script src="js/events.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/animations.js" defer></script>
+</body>
+</html>

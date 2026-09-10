@@ -1,0 +1,244 @@
+/* ====================================================================
+  ZENTRIX 2026 - Coordinator Admin Login CSS
+   The Kavery Engineering College (Autonomous)
+   Phase 1: Internal College Symposium
+   ==================================================================== */
+
+.login-wrapper {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5rem 1.5rem 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.login-card {
+  max-width: 460px;
+  width: 100%;
+  padding: 3rem 2.5rem 2.5rem;
+  background: linear-gradient(145deg, rgba(18, 21, 38, 0.95) 0%, rgba(8, 10, 20, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 242, 254, 0.35);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 242, 254, 0.15);
+  position: relative;
+  overflow: hidden;
+  animation: loginCardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes loginCardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Glowing Top Accent Strip */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple), var(--accent-magenta));
+}
+
+/* Header & Typography */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-badge {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+}
+
+.login-heading {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+}
+
+.login-subheading {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.login-college {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Form Styles */
+.login-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.login-form label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.input-with-icon .form-control {
+  width: 100%;
+  padding: 0.9rem 1.1rem 0.9rem 2.75rem;
+  background: rgba(10, 11, 16, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  transition: all 0.2s ease;
+}
+
+.input-with-icon .form-control:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+  background: rgba(10, 11, 16, 0.95);
+}
+
+.input-with-icon .form-control:focus + .input-icon,
+.input-with-icon:focus-within .input-icon {
+  color: var(--accent-cyan);
+}
+
+/* Submit Button */
+.login-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btnSpin 0.8s linear infinite;
+}
+
+@keyframes btnSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Alerts */
+.alert {
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  animation: alertFadeIn 0.3s ease;
+}
+
+@keyframes alertFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-danger {
+  background: rgba(255, 71, 87, 0.15);
+  border: 1px solid rgba(255, 71, 87, 0.45);
+  color: #ff6b81;
+}
+
+.alert-success {
+  background: rgba(0, 255, 136, 0.15);
+  border: 1px solid rgba(0, 255, 136, 0.45);
+  color: var(--accent-green);
+}
+
+/* Footer Link */
+.login-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+}
+
+.login-footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-footer a:hover {
+  color: var(--accent-cyan);
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 2.25rem 1.5rem 2rem;
+  }
+
+  .login-heading {
+    font-size: 1.85rem;
+  }
+
+  .login-subheading {
+    font-size: 1rem;
+  }
+}

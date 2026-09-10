@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Student Registration for ZENTRIX 2026 - Exclusively for The Kavery institutions.">
+  <title>Register | ZENTRIX 2026 | The Kavery Engineering College</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2fe' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>" type="image/svg+xml">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/register.css?v=payment-proof-2">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Ambient Glow -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Glass Navbar -->
+  <header class="header scrolled">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/logo.png" alt="Kavery Emblem" class="brand-logo"
+          onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300f2fe\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
+        <div class="brand-info">
+          <h1 class="gradient-gold">THE KAVERY ENGINEERING COLLEGE</h1>
+          <span>(AUTONOMOUS) &bull; MECHERI, SALEM</span>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">&#9776;</button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="index.html#events">EVENTS</a></li>
+        <li><a href="#" class="active">REGISTER</a></li>
+        <li><a href="index.html#contact">CONTACT</a></li>
+        <li><a href="login.html" class="btn btn-outline btn-sm">ADMIN</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Registration Page Body -->
+  <div class="register-page">
+    <div class="container">
+
+      <!-- Page Header -->
+      <div class="reg-page-header" data-reveal>
+        <div class="reg-page-badge">⚡ INTERNAL COLLEGE EDITION</div>
+        <h1 class="reg-page-title">ZENTRIX <span class="gradient-text">2026</span></h1>
+        <h2 class="reg-page-subtitle">INTERNAL COLLEGE REGISTRATION</h2>
+        <p class="reg-page-note">
+          <span class="lock-icon">🔒</span>
+          ONLY FOR THE KAVERY ENGINEERING COLLEGE STUDENTS
+        </p>
+      </div>
+
+      <!-- Setup Warning Banner (shown when Supabase is not configured) -->
+      <div id="setupBanner" class="setup-banner" style="display:none;">
+        <div class="setup-banner-icon">⚙️</div>
+        <div>
+          <strong>Supabase Not Configured</strong>
+          <p>Please update <code>js/config.js</code> with your Supabase URL and Anon Key before accepting registrations.</p>
+        </div>
+      </div>
+
+      <!-- Global Form Alert -->
+      <div id="formAlert" role="alert" aria-live="polite"></div>
+
+      <!-- Registration Form Card -->
+      <div class="reg-form-card glass-card" data-reveal="zoom">
+
+        <div class="payment-panel" aria-labelledby="paymentTitle">
+          <div class="payment-copy">
+            <span class="payment-kicker">REGISTRATION FEE</span>
+            <div class="per-head-fee">₹150 <span>PER HEAD</span></div>
+            <h2 id="paymentTitle">Step 1: Pay <span id="paymentTotal">₹150</span> total</h2>
+            <p>Scan the QR using GPay, PhonePe, Paytm or BHIM. Total payment = ₹150 per head × total participants.</p>
+            <div class="payment-details">
+              <strong>UPI ID: <span id="upiId">vasukixlnc@okaxis</span></strong>
+              <button type="button" class="btn btn-outline btn-sm" id="copyUpiBtn">COPY UPI ID</button>
+            </div>
+            <p class="payment-account">Account name: Vasuki Rajkumar</p>
+          </div>
+          <img class="payment-qr" src="https://zentrix-rho.vercel.app/qr-code.jpg" alt="UPI payment QR code for ₹150 registration fee">
+        </div>
+
+        <div class="payment-proof-panel">
+          <div class="payment-proof-heading">
+            <span class="payment-kicker">PAYMENT VERIFICATION</span>
+            <h3>Step 2: Upload your payment proof</h3>
+            <p>Enter the UTR/transaction ID from your payment receipt and upload the screenshot. Both are required.</p>
+          </div>
+          <div class="payment-proof-grid">
+            <div class="form-group">
+              <label for="transactionId" class="form-label">
+                Transaction ID / UTR Number <span class="required-star">*</span>
+              </label>
+              <input type="text" id="transactionId" name="transactionId" class="form-control"
+                placeholder="Enter the UTR from your payment receipt" maxlength="80" required
+                aria-required="true" aria-describedby="transactionId-error">
+              <span class="field-error" id="transactionId-error" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="paymentScreenshot" class="form-label">
+                Payment Screenshot <span class="required-star">*</span>
+              </label>
+              <input type="file" id="paymentScreenshot" name="paymentScreenshot" class="form-control"
+                accept="image/png,image/jpeg,image/webp" required aria-required="true"
+                aria-describedby="paymentScreenshot-error paymentScreenshot-hint">
+              <span class="field-hint" id="paymentScreenshot-hint">PNG, JPG or WEBP only, maximum 5MB.</span>
+              <span class="field-error" id="paymentScreenshot-error" role="alert"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Steps Indicator -->
+        <div class="form-steps">
+          <div class="step active" id="step-indicator-1">
+            <span class="step-num">1</span>
+            <span class="step-label">Personal Info</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-indicator-2">
+            <span class="step-num">2</span>
+            <span class="step-label">Event Selection</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-indicator-3">
+            <span class="step-num">3</span>
+            <span class="step-label">Confirm</span>
+          </div>
+        </div>
+
+        <form id="registrationForm" novalidate autocomplete="on">
+
+          <!-- SECTION 1: Personal Information -->
+          <div class="form-section" id="section-personal">
+            <h3 class="form-section-title">
+              <span class="section-num">01</span>
+              Personal Information
+            </h3>
+
+            <div class="form-grid-2">
+              <!-- Full Name -->
+              <div class="form-group">
+                <label for="studentName" class="form-label">
+                  Full Name <span class="required-star">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="studentName"
+                  name="studentName"
+                  class="form-control"
+                  placeholder="e.g. Arun Kumar M"
+                  autocomplete="name"
+                  maxlength="120"
+                  required
+                  aria-required="true"
+                  aria-describedby="studentName-error"
+                >
+                <span class="field-error" id="studentName-error" role="alert"></span>
+              </div>
+
+              <!-- Register Number -->
+              <div class="form-group">
+                <label for="rollNumber" class="form-label">
+                  Register Number <span class="required-star">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="rollNumber"
+                  name="rollNumber"
+                  class="form-control"
+                  placeholder="e.g. 23CSE014"
+                  autocomplete="off"
+                  maxlength="20"
+                  required
+                  aria-required="true"
+                  aria-describedby="rollNumber-error"
+                >
+                <span class="field-error" id="rollNumber-error" role="alert"></span>
+              </div>
+
+              <!-- Department -->
+              <div class="form-group">
+                <label for="department" class="form-label">
+                  Department <span class="required-star">*</span>
+                </label>
+                <select
+                  id="department"
+                  name="department"
+                  class="form-control"
+                  required
+                  aria-required="true"
+                  aria-describedby="department-error"
+                >
+                  <option value="">-- Select Department --</option>
+                  <option value="CSE">Computer Science & Engineering (CSE)</option>
+                  <option value="IT">Information Technology (IT)</option>
+                  <option value="AIDS">Artificial Intelligence & Data Science (AI & DS)</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="field-error" id="department-error" role="alert"></span>
+                <input
+                  type="text"
+                  id="customDepartment"
+                  name="customDepartment"
+                  class="form-control custom-department-input"
+                  placeholder="Enter your department name"
+                  maxlength="80"
+                  aria-describedby="customDepartment-error"
+                  hidden
+                >
+                <span class="field-error" id="customDepartment-error" role="alert"></span>
+              </div>
+
+              <!-- Year of Study -->
+              <div class="form-group">
+                <label for="yearOfStudy" class="form-label">
+                  Year of Study <span class="required-star">*</span>
+                </label>
+                <select
+                  id="yearOfStudy"
+                  name="yearOfStudy"
+                  class="form-control"
+                  required
+                  aria-required="true"
+                  aria-describedby="yearOfStudy-error"
+                >
+                  <option value="">-- Select Year --</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="Final Year">Final Year</option>
+                </select>
+                <span class="field-error" id="yearOfStudy-error" role="alert"></span>
+              </div>
+
+              <!-- Section -->
+              <div class="form-group">
+                <label for="section" class="form-label">Section</label>
+                <input
+                  type="text"
+                  id="section"
+                  name="section"
+                  class="form-control"
+                  placeholder="e.g. A"
+                  maxlength="5"
+                  aria-describedby="section-hint"
+                >
+                <span class="field-hint" id="section-hint">Optional</span>
+              </div>
+
+              <!-- Institution -->
+              <div class="form-group">
+                <label for="institution" class="form-label">
+                  Institution <span class="required-star">*</span>
+                </label>
+                <select
+                  id="institution"
+                  name="institution"
+                  class="form-control"
+                  required
+                  aria-required="true"
+                  aria-describedby="institution-error"
+                >
+                  <option value="">-- Select Institution --</option>
+                  <option value="The Kavery Engineering College (Autonomous)">The Kavery Engineering College</option>
+                  <option value="The Kavery Polytechnic College">The Kavery Polytechnic College</option>
+                  <option value="The Kavery Arts and Science College">The Kavery Arts and Science College</option>
+                </select>
+                <span class="field-error" id="institution-error" role="alert"></span>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label for="email" class="form-label">
+                  Student Email Address <span class="required-star">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="e.g. student@gmail.com"
+                  autocomplete="email"
+                  maxlength="120"
+                  required
+                  aria-required="true"
+                  aria-describedby="email-error"
+                >
+                <span class="field-error" id="email-error" role="alert"></span>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label for="phone" class="form-label">
+                  Phone Number <span class="required-star">*</span>
+                </label>
+                <div class="input-with-prefix">
+                  <span class="input-prefix">+91</span>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    class="form-control with-prefix"
+                    placeholder="9876543210"
+                    autocomplete="tel"
+                    maxlength="10"
+                    pattern="[6-9][0-9]{9}"
+                    required
+                    aria-required="true"
+                    aria-describedby="phone-error"
+                  >
+                </div>
+                <span class="field-error" id="phone-error" role="alert"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: Event Selection -->
+          <div class="form-section" id="section-event">
+            <h3 class="form-section-title">
+              <span class="section-num">02</span>
+              Choose Your Events <span class="required-star">*</span>
+            </h3>
+
+            <div class="event-category-group">
+              <div class="event-category-heading">
+                <h4>Technical Events <span class="required-star">Choose 1</span></h4>
+                <span id="technicalSelectionStatus">0/1 selected</span>
+              </div>
+              <div id="technicalEventSelector" class="event-selector-container">
+                <div class="events-loading"><div class="spinner"></div><span>Loading technical events...</span></div>
+              </div>
+            </div>
+            <div class="event-category-group">
+              <div class="event-category-heading">
+                <h4>Non-Technical Events <span class="required-star">Choose 1</span></h4>
+                <span id="nonTechnicalSelectionStatus">0/1 selected</span>
+              </div>
+              <div id="nonTechnicalEventSelector" class="event-selector-container">
+                <div class="events-loading"><div class="spinner"></div><span>Loading non-technical events...</span></div>
+              </div>
+            </div>
+            <span class="field-error" id="event-error" role="alert"></span>
+          </div>
+
+          <!-- SECTION 3: Team Details (conditional) -->
+          <div class="form-section" id="section-team" style="display:none;">
+            <h3 class="form-section-title">
+              <span class="section-num">03</span>
+              Team Details
+              <span class="team-size-hint" id="teamSizeHint"></span>
+            </h3>
+
+            <div class="form-grid-2">
+              <!-- Team Name -->
+              <div class="form-group full-width">
+                <label for="teamName" class="form-label">
+                  Team Name <span class="required-star" id="teamNameRequired">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="teamName"
+                  name="teamName"
+                  class="form-control"
+                  placeholder="e.g. Code Warriors"
+                  maxlength="60"
+                  aria-describedby="teamName-error"
+                >
+                <span class="field-error" id="teamName-error" role="alert"></span>
+              </div>
+
+              <!-- Team Member Fields (dynamic) -->
+              <div class="form-group full-width">
+                <label class="form-label">Team Member Details</label>
+                <div id="teamMembersContainer">
+                  <!-- Dynamically added by JS -->
+                </div>
+                <p class="field-hint">Add each extra member's full name and register number. You are counted as member 1.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4: Consent & Submit -->
+          <div class="form-section" id="section-consent">
+            <h3 class="form-section-title">
+              <span class="section-num" id="consentSectionNum">04</span>
+              Confirm & Submit
+            </h3>
+
+            <div class="consent-box">
+              <label class="consent-label" id="consentLabel">
+                <input
+                  type="checkbox"
+                  id="consentCheck"
+                  name="consent"
+                  required
+                  aria-required="true"
+                  aria-describedby="consent-error"
+                >
+                <span class="consent-text">
+                  I confirm that I am a current student of the selected Kavery institution.
+                  I agree to participate in ZENTRIX 2026 on <strong>24 September 2026</strong> and abide by all event rules and regulations.
+                  The information provided is accurate to the best of my knowledge.
+                </span>
+              </label>
+              <span class="field-error" id="consent-error" role="alert"></span>
+            </div>
+
+            <!-- Summary Preview -->
+            <div id="registrationSummary" class="reg-summary" style="display:none;">
+              <h4 class="summary-title">Registration Summary</h4>
+              <div id="summaryContent" class="summary-grid"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-area">
+              <button type="submit" id="submitBtn" class="btn btn-gold btn-lg submit-btn" aria-label="Submit Registration">
+                <span id="submitBtnText">REGISTER NOW</span>
+                <span id="submitSpinner" class="btn-spinner" style="display:none;" aria-hidden="true"></span>
+              </button>
+              <p class="submit-note">Your E-Pass will be generated immediately after registration.</p>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="registration-help">
+        <span>Need payment or event help?</span>
+        <a class="btn btn-outline btn-sm" href="https://chat.whatsapp.com/EAyCJCpGljE58YpA4cRGHy" target="_blank" rel="noopener">JOIN WHATSAPP GROUP</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 The Kavery Engineering College (Autonomous). All Rights Reserved. &bull; ZENTRIX 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts: config & events MUST load before registration.js -->
+  <script src="js/config.js?v=supabase-url-1"></script>
+  <script src="js/events.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/registration.js?v=payment-proof-2"></script>
+  <script src="js/animations.js" defer></script>
+</body>
+</html>
