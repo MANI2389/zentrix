@@ -177,7 +177,7 @@
     ctx.font = '900 120px "Space Grotesk", sans-serif';
     ctx.fillStyle = 'rgba(0, 242, 254, 0.025)';
     ctx.textAlign = 'center';
-    ctx.fillText('ZENTRIX 2026', width / 2, height / 2 + 40);
+    ctx.fillText('ZENTRIX 2K26', width / 2, height / 2 + 40);
     ctx.restore();
 
     // ── 5. Header Branding ──
@@ -203,7 +203,7 @@
     // Subtitle badge
     ctx.font = '700 12px "Inter", sans-serif';
     ctx.fillStyle = '#00f2fe';
-    ctx.fillText('ZENTRIX 2026 INTERNAL REGISTRATION PASS • 24 SEPTEMBER 2026', 48, 160);
+    ctx.fillText('ZENTRIX 2K26 INTERNAL REGISTRATION PASS • 24 SEPTEMBER 2026', 48, 160);
 
     // ── 6. ID & Status Badge (Top Right) ──
     const idBoxX = width - 330;

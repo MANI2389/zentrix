@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Student Registration for ZENTRIX 2026 - Exclusively for The Kavery institutions.">
-  <title>Register | ZENTRIX 2026 | The Kavery Engineering College</title>
+  <meta name="description" content="Student Registration for ZENTRIX 2K26 - Exclusively for The Kavery Engineering College students.">
+  <title>Register | ZENTRIX 2K26 | The Kavery Engineering College</title>
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2fe' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>" type="image/svg+xml">
+  <!-- Favicon using College Crest Logo -->
+  <link rel="icon" href="assets/logo.png" type="image/png">
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/register.css?v=payment-proof-2">
@@ -52,12 +52,15 @@
       <!-- Page Header -->
       <div class="reg-page-header" data-reveal>
         <div class="reg-page-badge">⚡ INTERNAL COLLEGE EDITION</div>
-        <h1 class="reg-page-title">ZENTRIX <span class="gradient-text">2026</span></h1>
+        <h1 class="reg-page-title">ZENTRIX <span class="gradient-text">2K26</span></h1>
         <h2 class="reg-page-subtitle">INTERNAL COLLEGE REGISTRATION</h2>
         <p class="reg-page-note">
           <span class="lock-icon">🔒</span>
           ONLY FOR THE KAVERY ENGINEERING COLLEGE STUDENTS
         </p>
+        <div class="deadline-pill-banner" style="display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,215,0,0.1);border:1px solid var(--border-gold);padding:0.4rem 1.25rem;border-radius:50px;color:var(--accent-gold);font-weight:700;font-size:0.85rem;letter-spacing:1px;margin-top:0.75rem;">
+          ⏳ REGISTRATION DEADLINE: 21 SEPTEMBER 2026
+        </div>
       </div>
 
       <!-- Setup Warning Banner (shown when Supabase is not configured) -->
@@ -75,50 +78,6 @@
       <!-- Registration Form Card -->
       <div class="reg-form-card glass-card" data-reveal="zoom">
 
-        <div class="payment-panel" aria-labelledby="paymentTitle">
-          <div class="payment-copy">
-            <span class="payment-kicker">REGISTRATION FEE</span>
-            <div class="per-head-fee">₹150 <span>PER HEAD</span></div>
-            <h2 id="paymentTitle">Step 1: Pay <span id="paymentTotal">₹150</span> total</h2>
-            <p>Scan the QR using GPay, PhonePe, Paytm or BHIM. Total payment = ₹150 per head × total participants.</p>
-            <div class="payment-details">
-              <strong>UPI ID: <span id="upiId">vasukixlnc@okaxis</span></strong>
-              <button type="button" class="btn btn-outline btn-sm" id="copyUpiBtn">COPY UPI ID</button>
-            </div>
-            <p class="payment-account">Account name: Vasuki Rajkumar</p>
-          </div>
-          <img class="payment-qr" src="https://zentrix-rho.vercel.app/qr-code.jpg" alt="UPI payment QR code for ₹150 registration fee">
-        </div>
-
-        <div class="payment-proof-panel">
-          <div class="payment-proof-heading">
-            <span class="payment-kicker">PAYMENT VERIFICATION</span>
-            <h3>Step 2: Upload your payment proof</h3>
-            <p>Enter the UTR/transaction ID from your payment receipt and upload the screenshot. Both are required.</p>
-          </div>
-          <div class="payment-proof-grid">
-            <div class="form-group">
-              <label for="transactionId" class="form-label">
-                Transaction ID / UTR Number <span class="required-star">*</span>
-              </label>
-              <input type="text" id="transactionId" name="transactionId" class="form-control"
-                placeholder="Enter the UTR from your payment receipt" maxlength="80" required
-                aria-required="true" aria-describedby="transactionId-error">
-              <span class="field-error" id="transactionId-error" role="alert"></span>
-            </div>
-            <div class="form-group">
-              <label for="paymentScreenshot" class="form-label">
-                Payment Screenshot <span class="required-star">*</span>
-              </label>
-              <input type="file" id="paymentScreenshot" name="paymentScreenshot" class="form-control"
-                accept="image/png,image/jpeg,image/webp" required aria-required="true"
-                aria-describedby="paymentScreenshot-error paymentScreenshot-hint">
-              <span class="field-hint" id="paymentScreenshot-hint">PNG, JPG or WEBP only, maximum 5MB.</span>
-              <span class="field-error" id="paymentScreenshot-error" role="alert"></span>
-            </div>
-          </div>
-        </div>
-
         <!-- Progress Steps Indicator -->
         <div class="form-steps">
           <div class="step active" id="step-indicator-1">
@@ -133,6 +92,11 @@
           <div class="step-line"></div>
           <div class="step" id="step-indicator-3">
             <span class="step-num">3</span>
+            <span class="step-label">Payment</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-indicator-4">
+            <span class="step-num">4</span>
             <span class="step-label">Confirm</span>
           </div>
         </div>
@@ -204,7 +168,11 @@
                   <option value="CSE">Computer Science & Engineering (CSE)</option>
                   <option value="IT">Information Technology (IT)</option>
                   <option value="AIDS">Artificial Intelligence & Data Science (AI & DS)</option>
-                  <option value="Other">Other</option>
+                  <option value="ECE">Electronics & Communication Engineering (ECE)</option>
+                  <option value="EEE">Electrical & Electronics Engineering (EEE)</option>
+                  <option value="MECH">Mechanical Engineering (MECH)</option>
+                  <option value="CIVIL">Civil Engineering (CIVIL)</option>
+                  <option value="Other">Other Engineering Department</option>
                 </select>
                 <span class="field-error" id="department-error" role="alert"></span>
                 <input
@@ -257,24 +225,26 @@
                 <span class="field-hint" id="section-hint">Optional</span>
               </div>
 
-              <!-- Institution -->
+              <!-- Institution (Locked to The Kavery Engineering College) -->
               <div class="form-group">
                 <label for="institution" class="form-label">
                   Institution <span class="required-star">*</span>
                 </label>
-                <select
-                  id="institution"
-                  name="institution"
-                  class="form-control"
-                  required
-                  aria-required="true"
-                  aria-describedby="institution-error"
-                >
-                  <option value="">-- Select Institution --</option>
-                  <option value="The Kavery Engineering College (Autonomous)">The Kavery Engineering College</option>
-                  <option value="The Kavery Polytechnic College">The Kavery Polytechnic College</option>
-                  <option value="The Kavery Arts and Science College">The Kavery Arts and Science College</option>
-                </select>
+                <div class="locked-institution-wrap">
+                  <input
+                    type="text"
+                    id="institution"
+                    name="institution"
+                    class="form-control locked-input"
+                    value="The Kavery Engineering College (Autonomous)"
+                    readonly
+                    tabindex="-1"
+                    aria-readonly="true"
+                    aria-describedby="institution-hint"
+                  >
+                  <span class="locked-badge">🔒 Locked</span>
+                </div>
+                <span class="field-hint" id="institution-hint">Internal College Edition: Only for The Kavery Engineering College students.</span>
                 <span class="field-error" id="institution-error" role="alert"></span>
               </div>
 
@@ -384,12 +354,79 @@
                 <div id="teamMembersContainer">
                   <!-- Dynamically added by JS -->
                 </div>
-                <p class="field-hint">Add each extra member's full name and register number. You are counted as member 1.</p>
+                <p class="field-hint">You (the person registering above) are Member 1 (Team Leader). You can add up to 2 extra members below (Maximum 3 persons total per team).</p>
               </div>
             </div>
           </div>
 
-          <!-- SECTION 4: Consent & Submit -->
+          <!-- SECTION: Payment & Verification (Moved to End) -->
+          <div class="form-section" id="section-payment">
+            <h3 class="form-section-title">
+              <span class="section-num" id="paymentSectionNum">03</span>
+              Payment & Verification <span class="required-star">*</span>
+            </h3>
+            <p class="section-desc">
+              Registration fee is <strong>₹100 per participant</strong>. Scan the QR code, pay via UPI, and submit your proof below.
+            </p>
+
+            <div class="payment-panel" aria-labelledby="paymentTitle">
+              <div class="payment-copy">
+                <span class="payment-kicker">REGISTRATION FEE</span>
+                <div class="per-head-fee">₹100 <span>PER HEAD</span></div>
+                <h4 id="paymentTitle">Total Payable: <span id="paymentTotal" class="gradient-gold">₹100</span></h4>
+                <p id="paymentBreakdownNote">₹100 per head × <span id="participantCountDisplay">1 participant</span></p>
+                <div class="payment-details">
+                  <strong>UPI ID: <span id="upiId">vasukixlnc@okaxis</span></strong>
+                  <button type="button" class="btn btn-outline btn-sm" id="copyUpiBtn">COPY UPI ID</button>
+                </div>
+                <p class="payment-account">Account name: Vasuki Rajkumar</p>
+              </div>
+              <div class="payment-qr-container">
+                <img class="payment-qr" src="https://zentrix-rho.vercel.app/qr-code.jpg" alt="UPI payment QR code for registration fee">
+                <span class="payment-qr-caption">Scan with GPay / PhonePe / Paytm</span>
+              </div>
+            </div>
+
+            <div class="payment-proof-panel">
+              <div class="payment-proof-heading">
+                <span class="payment-kicker">STEP 2 &bull; VERIFICATION</span>
+                <h4>Upload Payment Proof</h4>
+                <p>Enter the transaction ID / UTR number from your payment receipt and upload the screenshot.</p>
+              </div>
+              <div class="payment-proof-grid">
+                <div class="form-group">
+                  <label for="transactionId" class="form-label">
+                    Transaction ID / UTR Number <span class="required-star">*</span>
+                  </label>
+                  <input type="text" id="transactionId" name="transactionId" class="form-control"
+                    placeholder="Enter the 12-digit UTR from receipt" maxlength="80" required
+                    aria-required="true" aria-describedby="transactionId-error">
+                  <span class="field-error" id="transactionId-error" role="alert"></span>
+                </div>
+                <div class="form-group">
+                  <label for="paymentScreenshot" class="form-label">
+                    Payment Screenshot <span class="required-star">*</span>
+                  </label>
+                  <input type="file" id="paymentScreenshot" name="paymentScreenshot" class="form-control"
+                    accept="image/png,image/jpeg,image/webp" required aria-required="true"
+                    aria-describedby="paymentScreenshot-error paymentScreenshot-hint">
+                  <span class="field-hint" id="paymentScreenshot-hint">PNG, JPG or WEBP only, maximum 5MB.</span>
+                  <span class="field-error" id="paymentScreenshot-error" role="alert"></span>
+
+                  <!-- Live Image Preview -->
+                  <div id="paymentScreenshotPreview" class="screenshot-preview" style="display:none;">
+                    <img id="screenshotPreviewImg" src="" alt="Payment screenshot preview">
+                    <div class="screenshot-preview-meta">
+                      <span id="screenshotFileName" class="screenshot-filename"></span>
+                      <button type="button" id="removeScreenshotBtn" class="remove-screenshot-btn" aria-label="Remove screenshot">&times; Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION: Consent & Submit -->
           <div class="form-section" id="section-consent">
             <h3 class="form-section-title">
               <span class="section-num" id="consentSectionNum">04</span>
@@ -407,8 +444,8 @@
                   aria-describedby="consent-error"
                 >
                 <span class="consent-text">
-                  I confirm that I am a current student of the selected Kavery institution.
-                  I agree to participate in ZENTRIX 2026 on <strong>24 September 2026</strong> and abide by all event rules and regulations.
+                  I confirm that I am a current student of <strong>The Kavery Engineering College (Autonomous)</strong>.
+                  I agree to participate in ZENTRIX 2K26 on <strong>24 September 2026</strong> and abide by all event rules and regulations.
                   The information provided is accurate to the best of my knowledge.
                 </span>
               </label>
@@ -436,7 +473,7 @@
 
       <div class="registration-help">
         <span>Need payment or event help?</span>
-        <a class="btn btn-outline btn-sm" href="https://chat.whatsapp.com/EAyCJCpGljE58YpA4cRGHy" target="_blank" rel="noopener">JOIN WHATSAPP GROUP</a>
+        <a class="btn btn-outline btn-sm" href="https://chat.whatsapp.com/CVT6pFeq0fv79B0ny8onQF" target="_blank" rel="noopener">JOIN WHATSAPP GROUP</a>
       </div>
 
     </div>
@@ -446,7 +483,7 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-bottom">
-        <p>&copy; 2026 The Kavery Engineering College (Autonomous). All Rights Reserved. &bull; ZENTRIX 2026</p>
+        <p>&copy; 2026 The Kavery Engineering College (Autonomous). All Rights Reserved. &bull; ZENTRIX 2K26</p>
       </div>
     </div>
   </footer>

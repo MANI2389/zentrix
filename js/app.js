@@ -35,7 +35,8 @@ function initNavigation() {
   const header = document.querySelector('.header');
 
   if (navToggle && navLinks) {
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       navLinks.classList.toggle('active');
       navToggle.classList.toggle('open');
     });
@@ -56,11 +57,27 @@ function initNavigation() {
         if (navToggle) navToggle.classList.remove('open');
       });
     });
+
+    // Close mobile nav when clicking anywhere outside
+    document.addEventListener('click', (event) => {
+      if (navLinks.classList.contains('active') && !navLinks.contains(event.target) && !navToggle.contains(event.target)) {
+        navLinks.classList.remove('active');
+        navToggle.classList.remove('open');
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+        navToggle.classList.remove('open');
+      }
+    });
   }
 }
 
 /**
- * Countdown Timer to September 24, 2026
+ * Countdown Timer to Registration Deadline: September 21, 2026
  */
 function initCountdownTimer() {
   const daysEl = document.getElementById('cdDays');
@@ -70,7 +87,7 @@ function initCountdownTimer() {
 
   if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
-  const targetDate = new Date(window.SYMPOSIUM_META?.eventDate || '2026-09-24T09:00:00+05:30').getTime();
+  const targetDate = new Date(window.SYMPOSIUM_META?.registrationDeadline || '2026-09-21T23:59:59+05:30').getTime();
 
   function updateTimer() {
     const now = new Date().getTime();

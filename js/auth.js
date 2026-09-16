@@ -187,7 +187,7 @@
           // Immediately terminate the unauthorized session
           await client.auth.signOut();
           showAlert(
-            'Access Denied: The account "' + email + '" is authenticated in Supabase but is NOT registered in the admin_users authorization table. Please contact the ZENTRIX 2026 organizers.',
+            'Access Denied: The account "' + email + '" is authenticated in Supabase but is NOT registered in the admin_users authorization table. Please contact the ZENTRIX 2K26 organizers.',
             'danger'
           );
           setLoading(false);

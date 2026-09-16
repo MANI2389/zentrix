@@ -4,7 +4,7 @@
    Departments of CSE, IT & AI & DS
    ==================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap');
 
 :root {
   /* Color Palette - Premium Cyberpunk & Tech Gold */
@@ -388,19 +388,102 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-college-top {
   font-family: var(--font-heading);
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem;
+  font-size: clamp(0.75rem, 1.6vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.organizing-label {
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.35rem 1.25rem;
+  border-radius: 50px;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .hero-college-sub {
-  font-size: 0.95rem;
-  color: var(--accent-cyan);
-  letter-spacing: 3px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  font-family: 'Orbitron', 'Space Grotesk', sans-serif;
   margin-bottom: 1.75rem;
+}
+
+.dept-badge {
+  font-family: 'Orbitron', var(--font-heading);
+  font-size: clamp(1.15rem, 2.8vw, 1.95rem);
+  font-weight: 900;
+  letter-spacing: 3px;
+  padding: 0.4rem 1.35rem;
+  border-radius: 12px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dept-cse {
+  color: #00f2fe;
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.12) 0%, rgba(13, 22, 45, 0.6) 100%);
+  border: 1.5px solid rgba(0, 242, 254, 0.45);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.2), inset 0 0 12px rgba(0, 242, 254, 0.1);
+  text-shadow: 0 0 12px rgba(0, 242, 254, 0.5);
+}
+
+.dept-it {
+  color: #00ff88;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.12) 0%, rgba(10, 35, 25, 0.6) 100%);
+  border: 1.5px solid rgba(0, 255, 136, 0.45);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 0 12px rgba(0, 255, 136, 0.1);
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+}
+
+.dept-aids {
+  color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.12) 0%, rgba(40, 32, 10, 0.6) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.45);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2), inset 0 0 12px rgba(255, 215, 0, 0.1);
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
+
+.dept-badge:hover {
+  transform: translateY(-3px) scale(1.06);
+}
+
+.dept-cse:hover {
+  border-color: #00f2fe;
+  box-shadow: 0 0 30px rgba(0, 242, 254, 0.5), inset 0 0 20px rgba(0, 242, 254, 0.25);
+}
+
+.dept-it:hover {
+  border-color: #00ff88;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.5), inset 0 0 20px rgba(0, 255, 136, 0.25);
+}
+
+.dept-aids:hover {
+  border-color: #ffd700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.25);
+}
+
+.dept-sep {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 1.4rem;
+  font-weight: 300;
 }
 
 .hero-edition-badge {
@@ -484,6 +567,204 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
+}
+
+/* ──────────────────────────────────────────────────
+   Registration Deadline & Countdown Timer Card
+   ────────────────────────────────────────────────── */
+.deadline-section {
+  padding-top: 0.5rem;
+  padding-bottom: 3.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.deadline-countdown-card {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(255, 215, 0, 0.35);
+  background: linear-gradient(135deg, rgba(18, 24, 48, 0.88) 0%, rgba(10, 14, 28, 0.96) 100%);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.deadline-countdown-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold), var(--accent-green));
+}
+
+.deadline-header {
+  margin-bottom: 2rem;
+}
+
+.deadline-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1.25rem;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--border-gold);
+  border-radius: 50px;
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-gold);
+  animation: pulseGlow 1.5s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px var(--accent-gold); }
+}
+
+.deadline-date-text {
+  font-family: 'Orbitron', var(--font-heading);
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.deadline-note {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0 2.5rem;
+  flex-wrap: wrap;
+}
+
+.countdown-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 12, 24, 0.9);
+  border: 1.5px solid rgba(0, 242, 254, 0.3);
+  border-radius: 14px;
+  padding: 1.25rem 1.75rem;
+  min-width: 105px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.08);
+  transition: all 0.25s ease;
+}
+
+.countdown-card:hover {
+  border-color: var(--accent-cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 242, 254, 0.25);
+}
+
+.countdown-val {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 900;
+  color: var(--accent-cyan);
+  line-height: 1;
+  text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+  margin-bottom: 0.35rem;
+}
+
+.countdown-lbl {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+}
+
+.countdown-col-sep {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.deadline-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.whatsapp-join-btn {
+  background: rgba(37, 211, 102, 0.12);
+  border-color: rgba(37, 211, 102, 0.4);
+  color: #25d366;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+}
+
+.whatsapp-join-btn:hover {
+  background: #25d366;
+  color: #040714;
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.5);
+  border-color: #25d366;
+  transform: translateY(-2px);
+}
+
+/* ──────────────────────────────────────────────────
+   Floating WhatsApp Quick Connect Button
+   ────────────────────────────────────────────────── */
+.floating-whatsapp-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 58px;
+  height: 58px;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 25px rgba(37, 211, 102, 0.45);
+  z-index: 999;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+}
+
+.floating-whatsapp-btn:hover {
+  transform: scale(1.12) translateY(-3px);
+  box-shadow: 0 10px 35px rgba(37, 211, 102, 0.7);
+}
+
+.meta-item-deadline strong {
+  color: var(--accent-gold);
 }
 
 .info-card {
@@ -841,11 +1122,26 @@ h1, h2, h3, h4, h5, h6 {
     gap: 2rem;
     padding: 2rem;
   }
-}
 
-@media (max-width: 900px) {
   .nav-toggle {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--accent-cyan);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+
+  .nav-toggle:hover,
+  .nav-toggle.open {
+    background: rgba(0, 242, 254, 0.15);
+    border-color: var(--accent-cyan);
   }
 
   .nav-links {
@@ -853,37 +1149,69 @@ h1, h2, h3, h4, h5, h6 {
     top: 70px;
     left: 0;
     width: 100%;
-    background: var(--bg-secondary);
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    background: rgba(10, 13, 24, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     flex-direction: column;
-    padding: 2.5rem 2rem;
-    gap: 1.75rem;
+    padding: 2rem 1.5rem;
+    gap: 1.25rem;
     border-bottom: 1px solid var(--border-color);
-    transform: translateY(-150%);
-    transition: var(--transition-fast);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    transform: translateY(-160%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
     z-index: 999;
   }
 
   .header.scrolled .nav-links {
     top: 58px;
+    max-height: calc(100vh - 58px);
   }
 
   .nav-links.active {
     transform: translateY(0);
   }
 
+  .nav-links li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links a {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 0;
+    font-size: 1.05rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .nav-links .btn {
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .hero {
     padding-top: 8.5rem;
-    padding-bottom: 4rem;
+    padding-bottom: 3.5rem;
   }
 
   .focus-list {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+  }
+
+  .focus-item {
+    grid-column: span 1 !important;
   }
 
   .hero-actions {
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    gap: 0.85rem;
   }
 
   .hero-actions .btn {
@@ -892,71 +1220,329 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .section {
-    padding: 4rem 0;
+    padding: 3.5rem 0;
   }
 
   .footer-content {
     flex-direction: column;
     text-align: center;
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .brand-logo {
+    height: 38px;
+  }
+
+  .brand-info h1 {
+    font-size: 0.92rem;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-info span {
+    font-size: 0.65rem;
+  }
+
+  .hero-college-top {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-college-sub {
+    gap: 0.5rem;
+  }
+
+  .dept-badge {
+    font-size: 1.1rem;
+    padding: 0.35rem 1rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 8.5vw, 4.2rem);
+  }
+
+  .deadline-countdown-card {
+    padding: 2rem 1.25rem;
+  }
+
+  .countdown-grid {
+    gap: 0.6rem;
+  }
+
+  .countdown-card {
+    min-width: 75px;
+    padding: 0.9rem 0.6rem;
+  }
+
+  .countdown-val {
+    font-size: 1.8rem;
   }
 }
 
 @media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
   html {
     font-size: 15px;
   }
 
   .container {
     padding: 0 1rem;
+    width: 100%;
+  }
+
+  .header {
+    padding: 0.55rem 0;
+  }
+
+  .brand-logo {
+    height: 34px;
+  }
+
+  .brand-info h1 {
+    font-size: 0.78rem;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+  }
+
+  .brand-info span {
+    display: none;
   }
 
   .hero {
-    padding-top: 7.5rem;
-    padding-bottom: 3rem;
+    padding-top: 6.2rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero-college-top {
+    font-size: 0.75rem;
+    letter-spacing: 0.8px;
+    line-height: 1.3;
+    padding: 0 0.5rem;
+  }
+
+  .hero-college-sub {
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .dept-badge {
+    font-size: 0.88rem;
+    padding: 0.3rem 0.7rem;
+    letter-spacing: 1px;
+    border-radius: 8px;
+  }
+
+  .dept-sep {
+    display: none;
+  }
+
+  .hero-edition-badge {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .hero-title {
+    font-size: clamp(2.1rem, 9.5vw, 3.2rem);
+    letter-spacing: 0;
+    margin-bottom: 0.75rem;
+    word-break: break-word;
+  }
+
+  .hero-tagline {
+    font-size: clamp(0.88rem, 3.6vw, 1.2rem);
+    letter-spacing: 1.5px;
+    margin-bottom: 1.5rem;
   }
 
   .hero-meta-strip {
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.55rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
   }
 
   .meta-item {
-    font-size: 0.95rem;
+    width: 100%;
+    font-size: 0.85rem;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+  }
+
+  .hero-internal-note {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.75rem;
+    line-height: 1.4;
+    width: 100%;
+    text-align: center;
+  }
+
+  .hero-actions {
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.85rem 1rem;
+    font-size: 0.88rem;
+  }
+
+  /* Countdown on Mobile */
+  .deadline-section {
+    padding: 0.5rem 0 2rem;
+  }
+
+  .deadline-countdown-card {
+    padding: 1.5rem 0.85rem;
+    border-radius: 14px;
+  }
+
+  .deadline-badge-pill {
+    font-size: 0.68rem;
+    padding: 0.35rem 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  .deadline-date-text {
+    font-size: clamp(1.35rem, 5.8vw, 1.85rem);
+    letter-spacing: 0.5px;
+  }
+
+  .deadline-note {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+    margin: 1.25rem 0 1.5rem;
+    width: 100%;
+  }
+
+  .countdown-col-sep {
+    display: none;
+  }
+
+  .countdown-card {
+    min-width: 0;
+    width: 100%;
+    padding: 0.75rem 0.2rem;
+    border-radius: 10px;
+  }
+
+  .countdown-val {
+    font-size: 1.45rem;
+    line-height: 1;
+  }
+
+  .countdown-lbl {
+    font-size: 0.58rem;
+    letter-spacing: 0.5px;
+    margin-top: 0.3rem;
+  }
+
+  .deadline-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .deadline-actions .btn {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    justify-content: center;
   }
 
   .glass-card {
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem 1rem;
   }
 
   .section {
-    padding: 3rem 0;
-  }
-
-  .info-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    padding: 2.75rem 0;
   }
 
   .section-header {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+  }
+
+  .info-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 
   .events-8-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .event-8-card {
+    padding: 1.5rem 1.15rem;
+    border-radius: 14px;
+  }
+
+  .event-8-card .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .why-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .why-card {
+    padding: 1.5rem 1.15rem;
   }
 
   .contact-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .brand-info h1 {
-    font-size: 1rem;
+  .contact-card {
+    padding: 1.5rem 1.15rem;
   }
 
-  .brand-info span {
-    font-size: 0.65rem;
+  .floating-whatsapp-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  .floating-whatsapp-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .footer-content {
+    gap: 1.25rem;
+  }
+
+  .footer-bottom {
+    font-size: 0.75rem;
+    line-height: 1.5;
   }
 }

@@ -137,10 +137,14 @@
     var lines   = document.querySelectorAll('.form-steps .step-line');
     var personal = checkPersonalSectionFilled();
     var hasEvent = !!(selectedTechnicalId && selectedNonTechnicalId);
+    var screenshotInput = el('paymentScreenshot');
+    var hasScreenshot = !!(screenshotInput && screenshotInput.files && screenshotInput.files[0]);
+    var hasPayment = val('transactionId').length >= 6 && hasScreenshot;
 
     var active = 1;
-    if (personal)            active = 2;
+    if (personal) active = 2;
     if (personal && hasEvent) active = 3;
+    if (personal && hasEvent && hasPayment) active = 4;
 
     steps.forEach(function (s, i) {
       var stepNum = i + 1;
@@ -282,17 +286,18 @@
     if (teamEvents.length) {
       teamSection.style.display = '';
 
+      var payNum = el('paymentSectionNum');
+      if (payNum) payNum.textContent = '04';
+
       var sectionNum = el('consentSectionNum');
-      if (sectionNum) sectionNum.textContent = '04';
+      if (sectionNum) sectionNum.textContent = '05';
 
       var sizeHint = el('teamSizeHint');
-      var maxTeamMembers = Math.max.apply(null, teamEvents.map(function (item) {
-        return item.maxTeamMembers;
-      }));
-      if (sizeHint) sizeHint.textContent = '(max ' + maxTeamMembers + ' members including you)';
+      var maxTeamMembers = 3;
+      if (sizeHint) sizeHint.textContent = '(Max 3 members per team: Leader + up to 2 extra members)';
 
-      // Build N-1 member input fields (leader counts as member 1)
-      buildTeamMemberFields(maxTeamMembers - 1);
+      // Build 2 extra member fields (Leader is Member 1, so Member 2 & 3)
+      buildTeamMemberFields(2);
 
       var tn = el('teamName');
       if (tn) tn.required = true;
@@ -300,8 +305,11 @@
     } else {
       teamSection.style.display = 'none';
 
+      var payNum2 = el('paymentSectionNum');
+      if (payNum2) payNum2.textContent = '03';
+
       var sectionNum2 = el('consentSectionNum');
-      if (sectionNum2) sectionNum2.textContent = '03';
+      if (sectionNum2) sectionNum2.textContent = '04';
 
       var tn2 = el('teamName');
       if (tn2) { tn2.required = false; tn2.value = ''; }
@@ -321,34 +329,38 @@
     container.innerHTML = '';
 
     for (var i = 1; i <= count; i++) {
+      var memberNum = i + 1; // Leader is Member 1, so additional inputs are Member 2 & 3
       var row = document.createElement('div');
       row.className = 'team-member-row';
       row.innerHTML =
-        '<span class="team-member-num">' + i + '.</span>' +
+        '<span class="team-member-num">Member ' + memberNum + '</span>' +
         '<input' +
         '  type="text"' +
         '  id="teamMemberName_' + i + '"' +
         '  name="teamMemberName_' + i + '"' +
         '  class="form-control"' +
-        '  placeholder="Member ' + i + ' full name"' +
+        '  placeholder="Member ' + memberNum + ' full name"' +
         '  maxlength="120"' +
         '  autocomplete="off"' +
-        '  aria-label="Member ' + i + ' full name"' +
+        '  aria-label="Member ' + memberNum + ' full name"' +
         '>' +
         '<input' +
         '  type="text"' +
         '  id="teamMemberReg_' + i + '"' +
         '  name="teamMemberReg_' + i + '"' +
         '  class="form-control"' +
-        '  placeholder="Member ' + i + ' register number"' +
+        '  placeholder="Member ' + memberNum + ' register number"' +
         '  maxlength="20"' +
         '  autocomplete="off"' +
-        '  aria-label="Member ' + i + ' register number"' +
+        '  aria-label="Member ' + memberNum + ' register number"' +
         '>';
       container.appendChild(row);
 
       row.querySelectorAll('input').forEach(function (input) {
-        input.addEventListener('input', updatePaymentTotal);
+        input.addEventListener('input', function () {
+          updatePaymentTotal();
+          updateSummary();
+        });
       });
     }
   }
@@ -365,11 +377,19 @@
     return completeMembers;
   }
 
+  function getFeePerHead() {
+    return (window.SYMPOSIUM_META && window.SYMPOSIUM_META.registrationFee) || 100;
+  }
+
   function updatePaymentTotal() {
     var totalEl = el('paymentTotal');
-    if (!totalEl) return;
+    var countEl = el('participantCountDisplay');
     var participantCount = 1 + getTeamMemberCount();
-    totalEl.textContent = '₹' + (participantCount * 150);
+    var fee = getFeePerHead();
+    if (totalEl) totalEl.textContent = '₹' + (participantCount * fee);
+    if (countEl) {
+      countEl.textContent = participantCount + (participantCount === 1 ? ' participant' : ' participants');
+    }
   }
 
   function validateTeamMembers() {
@@ -434,7 +454,7 @@
      ────────────────────────────────────────── */
 
   function setupRealTimeValidation() {
-    var blurFields = ['studentName', 'rollNumber', 'department', 'yearOfStudy', 'institution', 'email', 'phone'];
+    var blurFields = ['studentName', 'rollNumber', 'department', 'yearOfStudy', 'institution', 'email', 'phone', 'transactionId'];
 
     blurFields.forEach(function (id) {
       var input = el(id);
@@ -664,6 +684,11 @@
     var technicalName = currentTechnicalData ? currentTechnicalData.name : '—';
     var nonTechnicalName = currentNonTechnicalData ? currentNonTechnicalData.name : '—';
 
+    var participantCount = 1 + getTeamMemberCount();
+    var fee = getFeePerHead();
+    var totalAmount = '₹' + (participantCount * fee);
+    var utr = val('transactionId') || 'Pending';
+
     summaryContent.innerHTML =
       '<div class="summary-item"><span class="summary-label">Name</span>'        + '<span class="summary-val">' + esc(name)    + '</span></div>' +
       '<div class="summary-item"><span class="summary-label">Reg. No.</span>'    + '<span class="summary-val">' + esc(roll)    + '</span></div>' +
@@ -671,8 +696,10 @@
       '<div class="summary-item"><span class="summary-label">Year</span>'        + '<span class="summary-val">' + esc(yr)      + '</span></div>' +
       '<div class="summary-item"><span class="summary-label">Institution</span>' + '<span class="summary-val">' + esc(institution) + '</span></div>' +
       '<div class="summary-item"><span class="summary-label">Email</span>'       + '<span class="summary-val">' + esc(email)   + '</span></div>' +
-      '<div class="summary-item"><span class="summary-label">Technical</span>' + '<span class="summary-val">' + esc(technicalName) + '</span></div>' +
-      '<div class="summary-item"><span class="summary-label">Non-Technical</span>' + '<span class="summary-val">' + esc(nonTechnicalName) + '</span></div>';
+      '<div class="summary-item"><span class="summary-label">Technical</span>'   + '<span class="summary-val">' + esc(technicalName) + '</span></div>' +
+      '<div class="summary-item"><span class="summary-label">Non-Technical</span>' + '<span class="summary-val">' + esc(nonTechnicalName) + '</span></div>' +
+      '<div class="summary-item"><span class="summary-label">Total Fee</span>'   + '<span class="summary-val" style="color:var(--accent-gold);font-weight:700;">' + esc(totalAmount) + ' (' + participantCount + ' pax)</span></div>' +
+      '<div class="summary-item"><span class="summary-label">UTR / Trans. ID</span>' + '<span class="summary-val">' + esc(utr) + '</span></div>';
 
     var complete = (name !== '—' && roll !== '—' && dept !== '—' && yr !== '—' && institution !== '—' &&
                    technicalName !== '—' && nonTechnicalName !== '—');
@@ -690,15 +717,19 @@
    *
    * @param {object} client   Supabase client
    * @param {string} regNum   UPPERCASE register number
-   * @param {string} eventId  event.id string
+   * @param {string} [eventId] Optional event.id string
    */
   async function checkDuplicate(client, regNum, eventId) {
-    var result = await client
+    var query = client
       .from('registrations')
       .select('id', { count: 'exact', head: true })   // HEAD request — no row data returned
-      .eq('register_number', regNum)
-      .eq('event_id', eventId)
-      .limit(1);
+      .eq('register_number', regNum);
+
+    if (eventId) {
+      query = query.eq('event_id', eventId);
+    }
+
+    var result = await query.limit(1);
 
     if (result.error) {
       // Log code only — not the register number or event data
@@ -725,20 +756,25 @@
     // 1. Try secure SECURITY DEFINER RPC endpoint first
     try {
       var rpcRes = await client.rpc('register_student', {
-        p_full_name       : payload.full_name,
-        p_register_number : payload.register_number,
-        p_department      : payload.department,
-        p_year            : payload.year,
-        p_institution     : payload.institution,
+        p_full_name             : payload.full_name,
+        p_register_number       : payload.register_number,
+        p_department            : payload.department,
+        p_year                  : payload.year,
+        p_institution           : payload.institution,
+        p_section               : payload.section || null,
+        p_email                 : payload.email,
+        p_phone                 : payload.phone,
         p_payment_transaction_id: payload.payment_transaction_id,
         p_payment_screenshot_url: payload.payment_screenshot_url,
-        p_section         : payload.section || null,
-        p_email           : payload.email,
-        p_phone           : payload.phone,
-        p_event_id        : payload.event_id,
-        p_event_name      : payload.event_name,
-        p_team_name       : payload.team_name || null,
-        p_team_members    : payload.team_members || null
+        p_technical_event_id    : payload.technical_event_id || null,
+        p_technical_event_name  : payload.technical_event_name || null,
+        p_non_technical_event_id: payload.non_technical_event_id || null,
+        p_non_technical_event_name: payload.non_technical_event_name || null,
+        p_amount_paid           : payload.amount_paid || 100,
+        p_team_name             : payload.team_name || null,
+        p_team_members          : payload.team_members || null,
+        p_event_id              : payload.event_id || null,
+        p_event_name            : payload.event_name || null
       });
 
       if (!rpcRes.error && rpcRes.data && rpcRes.data.registration_id) {
@@ -796,12 +832,11 @@
     var details = err.details || '';
 
     // ── PostgreSQL constraint violations ──────────────────────
-    // Unique constraint: (register_number, event_id)
-    if (code === '23505' || details.includes('uq_student_per_event')) {
+    // Unique constraint: (register_number) or (register_number, event_id)
+    if (code === '23505' || details.includes('uq_student_per_event') || details.includes('registrations_register_number_key') || message.toLowerCase().includes('duplicate key')) {
       return {
         type : 'warning',
-        html : 'You have already registered for <strong>' + esc(eventName) +
-               '</strong>. Each student may register for a given event only once.',
+        html : 'This register number has already been registered for ZENTRIX 2K26. Each student may register only once.',
       };
     }
 
@@ -946,18 +981,14 @@
     var transactionId = val('transactionId');
     var paymentScreenshot = el('paymentScreenshot').files[0];
 
-    var selectedEvents = [currentTechnicalData, currentNonTechnicalData];
-    var isTeam   = selectedEvents.some(function (event) { return event && event.teamBased; });
+    var isTeam = (currentTechnicalData && currentTechnicalData.teamBased) ||
+                 (currentNonTechnicalData && currentNonTechnicalData.teamBased);
     var teamName = isTeam ? (val('teamName') || null) : null;
 
-    // Collect additional team member names and register numbers (leader is NOT included)
+    // Collect additional team member names and register numbers (leader is Member 1, up to 2 extra)
     var teamMembers = [];
-    var maxTeamMembers = Math.max.apply(null, selectedEvents.map(function (event) {
-      return event && event.teamBased ? event.maxTeamMembers : 1;
-    }));
-    if (isTeam && maxTeamMembers > 1) {
-      var maxExtra = maxTeamMembers - 1;
-      for (var i = 1; i <= maxExtra; i++) {
+    if (isTeam) {
+      for (var i = 1; i <= 2; i++) {
         var memberNameInput = el('teamMemberName_' + i);
         var memberRegInput = el('teamMemberReg_' + i);
         if (memberNameInput && memberRegInput && memberNameInput.value.trim() && memberRegInput.value.trim()) {
@@ -968,6 +999,9 @@
         }
       }
     }
+
+    var participantCount = 1 + teamMembers.length;
+    var totalAmountPaid = participantCount * 100;
 
     // ── 3. Get Supabase client ─────────────────────────────────
     var client = typeof window.getSupabaseClient === 'function'
@@ -988,61 +1022,69 @@
     setLoadingState(true);
 
     try {
-      // ── 5. Upload payment proof once for both event rows ────
+      // ── 5. Check if student is already registered ───────────
+      var alreadyRegistered = await checkDuplicate(client, regNumber);
+      if (alreadyRegistered) {
+        showAlert(
+          'Student with Register Number <strong>' + esc(regNumber) + '</strong> is already registered. ' +
+          'Each student may submit only one registration.',
+          'warning'
+        );
+        return;
+      }
+
+      // ── 6. Upload payment proof to storage ───────────────────
       var paymentScreenshotUrl = await uploadPaymentScreenshot(client, paymentScreenshot, regNumber);
 
-      // ── 6. Check and save both category selections ──────────
-      var insertedRows = [];
-      for (var eventIndex = 0; eventIndex < selectedEvents.length; eventIndex++) {
-        var selectedEvent = selectedEvents[eventIndex];
-        var alreadyRegistered = await checkDuplicate(client, regNumber, selectedEvent.id);
+      // ── 7. Save single-row registration containing both events ─
+      var techId   = currentTechnicalData ? currentTechnicalData.id : null;
+      var techName = currentTechnicalData ? currentTechnicalData.name : null;
+      var nonTechId   = currentNonTechnicalData ? currentNonTechnicalData.id : null;
+      var nonTechName = currentNonTechnicalData ? currentNonTechnicalData.name : null;
+      var combinedEventName = techName && nonTechName ? techName + ' & ' + nonTechName : (techName || nonTechName || 'ZENTRIX 2K26');
 
-        if (alreadyRegistered) {
-          showAlert(
-            'You have already registered for <strong>' + esc(selectedEvent.name) + '</strong>. ' +
-            'Each student may register for a given event only once.',
-            'warning'
-          );
-          return;
-        }
+      var payload = {
+        full_name                 : fullName,
+        register_number           : regNumber,
+        department                : department,
+        year                      : year,
+        institution               : institution,
+        section                   : section,
+        email                     : email,
+        phone                     : phone,
+        payment_transaction_id    : transactionId,
+        payment_screenshot_url    : paymentScreenshotUrl,
+        technical_event_id        : techId,
+        technical_event_name      : techName,
+        non_technical_event_id    : nonTechId,
+        non_technical_event_name  : nonTechName,
+        amount_paid               : totalAmountPaid,
+        event_id                  : techId || 'zentrix-2026',
+        event_name                : combinedEventName,
+        team_name                 : teamName,
+        team_members              : teamMembers.length > 0 ? JSON.stringify(teamMembers) : null,
+        registration_type         : 'internal',
+        status                    : 'registered'
+      };
 
-        var payload = {
-          full_name         : fullName,
-          register_number   : regNumber,
-          department        : department,
-          year              : year,
-          institution       : institution,
-          payment_transaction_id: transactionId,
-          payment_screenshot_url: paymentScreenshotUrl,
-          section           : section,
-          email             : email,
-          phone             : phone,
-          event_id          : selectedEvent.id,
-          event_name        : selectedEvent.name,
-          team_name         : teamName,
-          team_members      : teamMembers.length > 0 ? JSON.stringify(teamMembers) : null,
-          registration_type : 'internal',
-          status            : 'registered',
-        };
-
-        insertedRows.push(await insertRegistration(client, payload));
-      }
+      var insertedRow = await insertRegistration(client, payload);
 
       // ── 8. Redirect to success.html ──────────────────────────
       // Pass only non-sensitive display data in the URL.
       // The registration_id (e.g. SYM2K26-CSE-0042) is safe to expose.
       var successParams = new URLSearchParams({
-        regId    : insertedRows[0].registration_id,
-        name     : fullName,
-        roll     : regNumber,
-        dept     : department,
-        year     : year,
-        institution: institution,
-        event    : currentTechnicalData.name,
-        eventId  : selectedTechnicalId,
-        nonTechnicalEvent : currentNonTechnicalData.name,
-        nonTechnicalEventId : selectedNonTechnicalId,
-        teamName : teamName || '',
+        regId               : insertedRow.registration_id,
+        name                : fullName,
+        roll                : regNumber,
+        dept                : department,
+        year                : year,
+        institution         : institution,
+        event               : techName || '',
+        eventId             : techId || '',
+        nonTechnicalEvent   : nonTechName || '',
+        nonTechnicalEventId : nonTechId || '',
+        teamName            : teamName || '',
+        amount              : String(totalAmountPaid)
       });
 
       // Navigate to success page — no "Registration Successful" shown
@@ -1088,6 +1130,72 @@
   }
 
   /* ──────────────────────────────────────────
+     Payment Screenshot Live Preview
+     ────────────────────────────────────────── */
+
+  function setupPaymentScreenshotPreview() {
+    var fileInput = el('paymentScreenshot');
+    var previewContainer = el('paymentScreenshotPreview');
+    var previewImg = el('screenshotPreviewImg');
+    var fileNameSpan = el('screenshotFileName');
+    var removeBtn = el('removeScreenshotBtn');
+
+    if (!fileInput) return;
+
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        if (previewContainer) previewContainer.style.display = 'none';
+        updateStepIndicatorAuto();
+        return;
+      }
+
+      if (!PAYMENT_SCREENSHOT_TYPES.includes(file.type)) {
+        setError('paymentScreenshot', 'Upload a PNG, JPG or WEBP image.');
+        fileInput.value = '';
+        if (previewContainer) previewContainer.style.display = 'none';
+        updateStepIndicatorAuto();
+        return;
+      }
+
+      if (file.size > MAX_PAYMENT_SCREENSHOT_BYTES) {
+        setError('paymentScreenshot', 'Payment screenshot must be 5MB or smaller.');
+        fileInput.value = '';
+        if (previewContainer) previewContainer.style.display = 'none';
+        updateStepIndicatorAuto();
+        return;
+      }
+
+      setValid('paymentScreenshot');
+
+      if (previewContainer && previewImg && fileNameSpan) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          previewImg.src = e.target.result;
+          fileNameSpan.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+          previewContainer.style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+      }
+
+      updateStepIndicatorAuto();
+      updateSummary();
+    });
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function () {
+        fileInput.value = '';
+        if (previewContainer) previewContainer.style.display = 'none';
+        if (previewImg) previewImg.src = '';
+        if (fileNameSpan) fileNameSpan.textContent = '';
+        setError('paymentScreenshot', '');
+        updateStepIndicatorAuto();
+        updateSummary();
+      });
+    }
+  }
+
+  /* ──────────────────────────────────────────
      Init
      ────────────────────────────────────────── */
 
@@ -1102,6 +1210,7 @@
     initNav();
     buildEventSelector();
     setupRealTimeValidation();
+    setupPaymentScreenshotPreview();
 
     // Pre-select event from URL — must run after buildEventSelector
     setTimeout(preselectEventFromURL, 0);

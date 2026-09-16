@@ -1,5 +1,5 @@
 -- ============================================================
--- ZENTRIX 2026 - Database Schema
+-- ZENTRIX 2K26 - Database Schema
 -- The Kavery Engineering College (Autonomous)
 -- Mecheri, Salem District, Tamil Nadu
 --
@@ -80,7 +80,14 @@ CREATE TABLE IF NOT EXISTS registrations (
   payment_transaction_id TEXT        NOT NULL,
   payment_screenshot_url TEXT        NOT NULL,
 
-  -- Event
+  -- Events (Single Row stores both Technical and Non-Technical events)
+  technical_event_id     TEXT,
+  technical_event_name   TEXT,
+  non_technical_event_id TEXT,
+  non_technical_event_name TEXT,
+  amount_paid            NUMERIC       DEFAULT 100,
+
+  -- Primary Event (Backward-Compatible)
   event_id            TEXT          NOT NULL,
   event_name          TEXT          NOT NULL,
 
@@ -154,6 +161,21 @@ ALTER TABLE registrations
 
 ALTER TABLE registrations
   ADD COLUMN IF NOT EXISTS payment_screenshot_url TEXT;
+
+ALTER TABLE registrations
+  ADD COLUMN IF NOT EXISTS technical_event_id TEXT;
+
+ALTER TABLE registrations
+  ADD COLUMN IF NOT EXISTS technical_event_name TEXT;
+
+ALTER TABLE registrations
+  ADD COLUMN IF NOT EXISTS non_technical_event_id TEXT;
+
+ALTER TABLE registrations
+  ADD COLUMN IF NOT EXISTS non_technical_event_name TEXT;
+
+ALTER TABLE registrations
+  ADD COLUMN IF NOT EXISTS amount_paid NUMERIC DEFAULT 100;
 
 DO $$
 BEGIN
@@ -263,7 +285,7 @@ CREATE INDEX IF NOT EXISTS idx_registrations_dept_year
 -- ============================================================
 
 COMMENT ON TABLE registrations IS
-  'ZENTRIX 2026 – Phase 1 Internal Student Registrations. One row per student per event.';
+  'ZENTRIX 2K26 – Phase 1 Internal Student Registrations. One row per student per event.';
 
 COMMENT ON COLUMN registrations.id IS
   'UUID primary key — internal use only.';
@@ -305,6 +327,21 @@ COMMENT ON COLUMN registrations.registration_date IS
 -- entire registrations table.
 -- ============================================================
 
+-- Drop any previous overloaded versions of register_student
+DO $$
+DECLARE
+  r RECORD;
+BEGIN
+  FOR r IN (
+    SELECT oid::regprocedure AS func_sig
+    FROM pg_proc
+    WHERE proname = 'register_student'
+      AND pronamespace = 'public'::regnamespace
+  ) LOOP
+    EXECUTE 'DROP FUNCTION IF EXISTS ' || r.func_sig || ' CASCADE';
+  END LOOP;
+END $$;
+
 CREATE OR REPLACE FUNCTION register_student(
   p_full_name         TEXT,
   p_register_number   TEXT,
@@ -316,10 +353,15 @@ CREATE OR REPLACE FUNCTION register_student(
   p_phone             TEXT DEFAULT NULL,
   p_payment_transaction_id TEXT DEFAULT NULL,
   p_payment_screenshot_url TEXT DEFAULT NULL,
-  p_event_id          TEXT DEFAULT NULL,
-  p_event_name        TEXT DEFAULT NULL,
+  p_technical_event_id TEXT DEFAULT NULL,
+  p_technical_event_name TEXT DEFAULT NULL,
+  p_non_technical_event_id TEXT DEFAULT NULL,
+  p_non_technical_event_name TEXT DEFAULT NULL,
+  p_amount_paid       NUMERIC DEFAULT 100,
   p_team_name         TEXT DEFAULT NULL,
-  p_team_members      TEXT DEFAULT NULL
+  p_team_members      TEXT DEFAULT NULL,
+  p_event_id          TEXT DEFAULT NULL,
+  p_event_name        TEXT DEFAULT NULL
 )
 RETURNS JSONB
 LANGUAGE plpgsql
@@ -329,7 +371,18 @@ AS $$
 DECLARE
   v_new_id          UUID;
   v_registration_id TEXT;
+  v_event_id        TEXT;
+  v_event_name      TEXT;
 BEGIN
+  -- Compute primary event identifier & readable compound name
+  v_event_id := COALESCE(NULLIF(trim(p_technical_event_id), ''), NULLIF(trim(p_event_id), ''), 'zentrix-2026');
+  
+  IF NULLIF(trim(p_technical_event_name), '') IS NOT NULL AND NULLIF(trim(p_non_technical_event_name), '') IS NOT NULL THEN
+    v_event_name := trim(p_technical_event_name) || ' & ' || trim(p_non_technical_event_name);
+  ELSE
+    v_event_name := COALESCE(NULLIF(trim(p_technical_event_name), ''), NULLIF(trim(p_event_name), ''), 'ZENTRIX 2K26');
+  END IF;
+
   INSERT INTO registrations (
     full_name,
     register_number,
@@ -341,6 +394,11 @@ BEGIN
     phone,
     payment_transaction_id,
     payment_screenshot_url,
+    technical_event_id,
+    technical_event_name,
+    non_technical_event_id,
+    non_technical_event_name,
+    amount_paid,
     event_id,
     event_name,
     team_name,
@@ -358,8 +416,13 @@ BEGIN
     trim(p_phone),
     trim(p_payment_transaction_id),
     trim(p_payment_screenshot_url),
-    trim(p_event_id),
-    trim(p_event_name),
+    NULLIF(trim(p_technical_event_id), ''),
+    NULLIF(trim(p_technical_event_name), ''),
+    NULLIF(trim(p_non_technical_event_id), ''),
+    NULLIF(trim(p_non_technical_event_name), ''),
+    COALESCE(p_amount_paid, 100),
+    v_event_id,
+    v_event_name,
     NULLIF(trim(p_team_name), ''),
     NULLIF(trim(p_team_members), ''),
     'internal',
@@ -376,5 +439,8 @@ END;
 $$;
 
 -- Grant execution permission to anonymous students and authenticated users
-GRANT EXECUTE ON FUNCTION register_student TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION register_student(
+  TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT,
+  TEXT, TEXT, TEXT, TEXT, NUMERIC, TEXT, TEXT, TEXT, TEXT
+) TO anon, authenticated;
 

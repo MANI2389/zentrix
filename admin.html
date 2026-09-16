@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="ZENTRIX 2026 Admin Dashboard — The Kavery Engineering College (Autonomous)">
-  <title>Admin Dashboard | ZENTRIX 2026</title>
+  <meta name="description" content="ZENTRIX 2K26 Admin Dashboard — The Kavery Engineering College (Autonomous)">
+  <title>Admin Dashboard | ZENTRIX 2K26</title>
 
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2fe' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>" type="image/svg+xml">
+  <!-- Favicon using College Crest Logo -->
+  <link rel="icon" href="assets/logo.png" type="image/png">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
@@ -17,6 +18,8 @@
 
   <!-- Supabase JS Client v2 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- SheetJS CDN for Excel (.xlsx) Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body class="admin-body">
 
@@ -34,7 +37,7 @@
           <img src="assets/logo.png" alt="Kavery Emblem" class="brand-logo"
             onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300f2fe\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
           <div class="brand-info">
-            <h1 class="gradient-gold">ZENTRIX 2026</h1>
+            <h1 class="gradient-gold">ZENTRIX 2K26</h1>
             <span>ADMIN DASHBOARD &bull; THE KAVERY ENGINEERING COLLEGE</span>
           </div>
         </a>
@@ -78,13 +81,24 @@
           <span id="refreshBtnText">REFRESH DATA</span>
         </button>
 
-        <button id="exportCsvBtn" class="btn btn-gold" title="Export currently filtered registrations to CSV">
+        <button id="exportExcelBtn" class="btn btn-gold" title="Export registrations to Microsoft Excel (.xlsx)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="8" y1="13" x2="16" y2="13"/>
+            <line x1="8" y1="17" x2="16" y2="17"/>
+            <line x1="10" y1="9" x2="14" y2="9"/>
+          </svg>
+          EXPORT EXCEL (.XLSX)
+        </button>
+
+        <button id="exportCsvBtn" class="btn btn-outline btn-sm" title="Export currently filtered registrations to CSV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          EXPORT CSV
+          CSV
         </button>
       </div>
     </div>
@@ -95,7 +109,7 @@
     <!-- ==================================================
          STATISTICS CARDS (All 9 Required Cards)
          ================================================== -->
-    <section class="stats-section" aria-label="ZENTRIX 2026 Statistics">
+    <section class="stats-section" aria-label="ZENTRIX 2K26 Statistics">
       <div class="stats-header">
         <h3 class="section-sub-title">EVENT REGISTRATION TELEMETRY</h3>
         <span class="stats-update-pill" id="statsTimestamp">Live Supabase Sync</span>
@@ -107,6 +121,13 @@
           <span class="metric-label">TOTAL REGISTRATIONS</span>
           <span class="metric-value" id="statTotal">0</span>
           <span class="metric-sub">Technical + Non-Technical</span>
+        </div>
+
+        <!-- 2. TOTAL REVENUE COLLECTED -->
+        <div class="metric-card card-revenue">
+          <span class="metric-label">TOTAL REVENUE</span>
+          <span class="metric-value" id="statTotalRevenue" style="color:var(--accent-gold);">₹0</span>
+          <span class="metric-sub" id="statRevenueCount">From 0 registrations</span>
         </div>
 
         <!-- 2. STARTUP SPARK -->
@@ -249,7 +270,7 @@
     <!-- Table Meta Bar -->
     <div class="table-info-bar">
       <div class="records-count">
-        Showing <strong id="recordCount" style="color:var(--accent-cyan);">0</strong> of <span id="totalRecordCount">0</span> registrations
+        Showing <strong id="recordCount" style="color:var(--accent-cyan);">0</strong> of <span id="totalRecordCount">0</span> registrations &bull; Total Fees: <strong id="tableTotalRevenue" style="color:var(--accent-gold);">₹0</strong>
       </div>
       <div class="table-hint">
         💡 Click any row to view complete student registration details
@@ -263,18 +284,18 @@
       <table class="admin-table" id="registrationsTable">
         <thead>
           <tr>
-            <th>Registration ID</th>
+            <th>Reg ID</th>
             <th>Name</th>
-            <th>Register Number</th>
-            <th>Department</th>
-            <th>Year</th>
-            <th>Section</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Event</th>
+            <th>Register No</th>
+            <th>Dept</th>
+            <th>Year / Sec</th>
+            <th>Technical Event</th>
+            <th>Non-Technical Event</th>
             <th>Team</th>
+            <th>Amount</th>
+            <th>Payment Proof</th>
             <th>Status</th>
-            <th>Registration Date</th>
+            <th>Date</th>
           </tr>
         </thead>
         <tbody id="regTableBody">
@@ -349,9 +370,31 @@
             <a href="#" class="modal-field-val link-phone" id="modalPhone">—</a>
           </div>
 
-          <div class="modal-item modal-span-2">
-            <span class="modal-field-lbl">Selected Event</span>
-            <span class="modal-field-val highlight-event" id="modalEventName">—</span>
+          <div class="modal-item">
+            <span class="modal-field-lbl">Technical Event</span>
+            <span class="modal-field-val highlight-event" id="modalTechnicalEvent">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Non-Technical Event</span>
+            <span class="modal-field-val highlight-event" id="modalNonTechnicalEvent">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">Amount Paid</span>
+            <span class="modal-field-val" id="modalAmountPaid" style="color:var(--accent-gold);font-weight:700;">—</span>
+          </div>
+
+          <div class="modal-item">
+            <span class="modal-field-lbl">UTR / Trans. ID</span>
+            <span class="modal-field-val utr-badge" id="modalUtrId">—</span>
+          </div>
+
+          <div class="modal-item modal-span-2" id="modalPaymentProofBox">
+            <span class="modal-field-lbl">Payment Proof (Click to Enlarge)</span>
+            <div class="modal-proof-container" id="modalProofContainer">
+              <!-- Rendered via JS -->
+            </div>
           </div>
 
           <div class="modal-item modal-span-2" id="modalTeamBox">
@@ -382,10 +425,33 @@
     </div>
   </div>
 
+  <!-- ==================================================
+       PAYMENT PROOF LIGHTBOX PREVIEW
+       ================================================== -->
+  <div class="lightbox-modal" id="proofLightbox" style="display:none;" aria-hidden="true">
+    <div class="lightbox-backdrop" id="proofLightboxBackdrop"></div>
+    <div class="lightbox-content glass-card">
+      <div class="lightbox-header">
+        <div>
+          <div class="modal-subtitle">PAYMENT VERIFICATION PROOF</div>
+          <h4 id="lightboxTitle" style="color:var(--accent-gold);margin:0.2rem 0 0;font-size:1.1rem;">Transaction Receipt</h4>
+        </div>
+        <button type="button" class="modal-close-btn" id="lightboxCloseBtn" aria-label="Close preview">✕</button>
+      </div>
+      <div class="lightbox-body">
+        <img id="lightboxImg" src="" alt="Payment Screenshot Full Size" class="lightbox-image">
+      </div>
+      <div class="lightbox-footer">
+        <span id="lightboxUtr" class="utr-badge">UTR: —</span>
+        <a id="lightboxOpenTab" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Open in New Tab ↗</a>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container footer-bottom">
-      <p>&copy; 2026 The Kavery Engineering College (Autonomous) &bull; ZENTRIX 2026 Administrative Command Center</p>
+      <p>&copy; 2026 The Kavery Engineering College (Autonomous) &bull; ZENTRIX 2K26 Administrative Command Center</p>
     </div>
   </footer>
 

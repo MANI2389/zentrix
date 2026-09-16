@@ -1,5 +1,5 @@
 -- ============================================================
--- ZENTRIX 2026 - Row Level Security (RLS) & Authorization
+-- ZENTRIX 2K26 - Row Level Security (RLS) & Authorization
 -- The Kavery Engineering College (Autonomous)
 -- Mecheri, Salem District, Tamil Nadu
 --
@@ -113,11 +113,12 @@ CREATE POLICY policy_anon_payment_upload
   WITH CHECK (bucket_id = 'payment-screenshots');
 
 DROP POLICY IF EXISTS policy_admin_payment_read ON storage.objects;
-CREATE POLICY policy_admin_payment_read
+DROP POLICY IF EXISTS policy_public_payment_read ON storage.objects;
+CREATE POLICY policy_public_payment_read
   ON storage.objects
   FOR SELECT
-  TO authenticated
-  USING (bucket_id = 'payment-screenshots' AND is_admin());
+  TO public
+  USING (bucket_id = 'payment-screenshots');
 
 -- 5a. Student Registration Submission:
 --     Allows unauthenticated visitors to submit their own registration.

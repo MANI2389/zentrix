@@ -211,12 +211,33 @@
     const total = allRegistrations.length;
     if (statTotal) statTotal.textContent = total;
 
-    // Helper to count by event id / name
+    // Calculate total revenue collected
+    const totalRevenue = allRegistrations.reduce((sum, r) => {
+      const amt = Number(r.amount_paid);
+      return sum + (!isNaN(amt) && amt > 0 ? amt : 100);
+    }, 0);
+
+    const statTotalRevenue = el('statTotalRevenue');
+    const statRevenueCount = el('statRevenueCount');
+    if (statTotalRevenue) statTotalRevenue.textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+    if (statRevenueCount) statRevenueCount.textContent = `From ${total} active registrations`;
+
+    const tableTotalRevenue = el('tableTotalRevenue');
+    if (tableTotalRevenue) tableTotalRevenue.textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+
+    // Helper to count by event id / name (checks both technical and non-technical selections)
     function countForEvent(idKeyword, nameKeyword) {
       return allRegistrations.filter(r => {
         const evId = (r.event_id || '').toLowerCase();
         const evName = (r.event_name || '').toLowerCase();
-        return evId === idKeyword || evName.includes(nameKeyword);
+        const techId = (r.technical_event_id || '').toLowerCase();
+        const techName = (r.technical_event_name || '').toLowerCase();
+        const nonTechId = (r.non_technical_event_id || '').toLowerCase();
+        const nonTechName = (r.non_technical_event_name || '').toLowerCase();
+
+        return evId === idKeyword || evName.includes(nameKeyword) ||
+               techId === idKeyword || techName.includes(nameKeyword) ||
+               nonTechId === idKeyword || nonTechName.includes(nameKeyword);
       }).length;
     }
 
@@ -255,22 +276,31 @@
     }
 
     filteredRegistrations = allRegistrations.filter(r => {
-      // 1. Search by Student Name, Register Number, Email
+      // 1. Search by Student Name, Register Number, Email, UTR, Phone, RegID
       const name = (r.full_name || '').toLowerCase();
       const roll = (r.register_number || '').toLowerCase();
       const email = (r.email || '').toLowerCase();
       const regId = (r.registration_id || '').toLowerCase();
+      const utr = (r.payment_transaction_id || '').toLowerCase();
+      const phone = (r.phone || '').toLowerCase();
 
       const matchesSearch = !q || (
         name.includes(q) ||
         roll.includes(q) ||
         email.includes(q) ||
-        regId.includes(q)
+        regId.includes(q) ||
+        utr.includes(q) ||
+        phone.includes(q)
       );
 
-      // 2. Filter by Event
+      // 2. Filter by Event (check primary event_id, technical_event_id, and non_technical_event_id)
       const evId = (r.event_id || '').toLowerCase();
-      const matchesEvent = selectedEvent === 'ALL' || evId === selectedEvent.toLowerCase();
+      const techId = (r.technical_event_id || '').toLowerCase();
+      const nonTechId = (r.non_technical_event_id || '').toLowerCase();
+      const matchesEvent = selectedEvent === 'ALL' ||
+                           evId === selectedEvent.toLowerCase() ||
+                           techId === selectedEvent.toLowerCase() ||
+                           nonTechId === selectedEvent.toLowerCase();
 
       // 3. Filter by Department
       const dept = (r.department || '').trim();
@@ -289,6 +319,15 @@
 
     const recordCountEl = el('recordCount');
     if (recordCountEl) recordCountEl.textContent = filteredRegistrations.length;
+
+    const tableTotalRevenue = el('tableTotalRevenue');
+    if (tableTotalRevenue) {
+      const filteredRevenue = filteredRegistrations.reduce((sum, r) => {
+        const amt = Number(r.amount_paid);
+        return sum + (!isNaN(amt) && amt > 0 ? amt : 100);
+      }, 0);
+      tableTotalRevenue.textContent = '₹' + filteredRevenue.toLocaleString('en-IN');
+    }
 
     renderTable(filteredRegistrations);
   }
@@ -319,12 +358,35 @@
       const roll = escapeHtml(r.register_number);
       const dept = escapeHtml(r.department);
       const year = escapeHtml(r.year);
-      const section = r.section ? escapeHtml(r.section) : '—';
-      const email = escapeHtml(r.email);
-      const phone = escapeHtml(r.phone);
-      const eventName = escapeHtml(r.event_name);
+      const section = r.section ? escapeHtml(r.section) : '';
+      const yearSec = section ? `${year} (${section})` : year;
+      const techName = escapeHtml(r.technical_event_name || r.event_name || '—');
+      const nonTechName = escapeHtml(r.non_technical_event_name || '—');
       const teamName = r.team_name ? escapeHtml(r.team_name) : '<span class="text-muted">Solo</span>';
+      const amount = escapeHtml(String(r.amount_paid || 100));
       const status = (r.status || 'registered').toLowerCase();
+
+      // Payment proof cell
+      let proofHtml = '<span class="no-proof-text">—</span>';
+      const utrStr = r.payment_transaction_id ? escapeHtml(r.payment_transaction_id) : '';
+      const safeImgUrl = r.payment_screenshot_url ? escapeHtml(r.payment_screenshot_url) : '';
+      const safeName = escapeHtml(r.full_name || '');
+
+      if (safeImgUrl) {
+        proofHtml = `
+          <div class="proof-cell">
+            <img src="${safeImgUrl}" alt="Proof" class="table-proof-thumb" onclick="event.stopPropagation(); window.SYM_ADMIN.openLightbox('${safeImgUrl}', '${utrStr}', '${safeName}')" title="Click to view payment proof receipt">
+            ${utrStr ? `<span class="utr-badge" title="UTR / Trans ID: ${utrStr}">UTR: ${utrStr}</span>` : ''}
+          </div>
+        `;
+      } else if (utrStr) {
+        proofHtml = `
+          <div class="proof-cell">
+            <span class="no-proof-text">No image</span>
+            <span class="utr-badge" title="UTR: ${utrStr}">UTR: ${utrStr}</span>
+          </div>
+        `;
+      }
 
       // Format registration date
       let dateStr = '—';
@@ -348,17 +410,17 @@
       const chipClass = `chip-${status}`;
 
       return `
-        <tr class="clickable-row" onclick="window.SYM_ADMIN.openDetailModal('${escapeHtml(r.id)}')" title="Click to view details">
+        <tr class="clickable-row" onclick="window.SYM_ADMIN.openDetailModal('${escapeHtml(r.id)}')" title="Click to view full student details">
           <td><code class="reg-id-cell">${regId}</code></td>
           <td><strong class="student-name-cell">${name}</strong></td>
           <td><code class="roll-cell">${roll}</code></td>
           <td><span class="badge badge-dept ${deptClass}">${dept}</span></td>
-          <td class="cell-nowrap">${year}</td>
-          <td class="text-center">${section}</td>
-          <td class="email-cell" title="${email}">${email}</td>
-          <td class="cell-nowrap">${phone}</td>
-          <td><strong class="event-name-cell">${eventName}</strong></td>
+          <td class="cell-nowrap">${yearSec}</td>
+          <td><strong class="event-name-cell">${techName}</strong></td>
+          <td><strong class="event-name-cell">${nonTechName}</strong></td>
           <td>${teamName}</td>
+          <td><span class="amount-cell">₹${amount}</span></td>
+          <td>${proofHtml}</td>
           <td><span class="status-chip ${chipClass}">${escapeHtml(status.toUpperCase())}</span></td>
           <td class="cell-nowrap cell-date">${dateStr}</td>
         </tr>
@@ -394,7 +456,29 @@
       phoneEl.href = record.phone ? `tel:${record.phone}` : '#';
     }
 
-    if (el('modalEventName')) el('modalEventName').textContent = record.event_name || record.event_id || '—';
+    if (el('modalTechnicalEvent')) el('modalTechnicalEvent').textContent = record.technical_event_name || record.event_name || '—';
+    if (el('modalNonTechnicalEvent')) el('modalNonTechnicalEvent').textContent = record.non_technical_event_name || '—';
+    if (el('modalAmountPaid')) el('modalAmountPaid').textContent = `₹${record.amount_paid || 100}`;
+    if (el('modalUtrId')) el('modalUtrId').textContent = record.payment_transaction_id ? `UTR: ${record.payment_transaction_id}` : 'Not Provided';
+
+    // Payment proof screenshot in modal
+    const proofContainer = el('modalProofContainer');
+    if (proofContainer) {
+      if (record.payment_screenshot_url) {
+        const safeImgUrl = escapeHtml(record.payment_screenshot_url);
+        const utrStr = escapeHtml(record.payment_transaction_id || '');
+        const safeName = escapeHtml(record.full_name || '');
+        proofContainer.innerHTML = `
+          <img src="${safeImgUrl}" alt="Payment Screenshot" class="modal-proof-thumb" onclick="window.SYM_ADMIN.openLightbox('${safeImgUrl}', '${utrStr}', '${safeName}')" title="Click to enlarge receipt">
+          <div style="margin-top:0.35rem; display:flex; gap:0.5rem; align-items:center;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.SYM_ADMIN.openLightbox('${safeImgUrl}', '${utrStr}', '${safeName}')">🔍 Enlarge Receipt</button>
+            <a href="${safeImgUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Open File ↗</a>
+          </div>
+        `;
+      } else {
+        proofContainer.innerHTML = `<span class="no-proof-text">No payment screenshot uploaded</span>`;
+      }
+    }
 
     // Team Details
     const teamBox = el('modalTeamBox');
@@ -545,6 +629,142 @@
     }
   }
 
+  /* ──────────────────────────────────────────────────
+     Payment Proof Lightbox Controls
+     ────────────────────────────────────────────────── */
+  function openLightbox(imgUrl, utr, studentName) {
+    if (!imgUrl) return;
+
+    const lb = el('proofLightbox');
+    const img = el('lightboxImg');
+    const utrEl = el('lightboxUtr');
+    const titleEl = el('lightboxTitle');
+    const openTab = el('lightboxOpenTab');
+
+    if (img) img.src = imgUrl;
+    if (utrEl) utrEl.textContent = utr ? `UTR: ${utr}` : 'UTR: Not Provided';
+    if (titleEl) titleEl.textContent = studentName ? `Receipt • ${studentName}` : 'Transaction Receipt';
+    if (openTab) openTab.href = imgUrl;
+
+    if (lb) {
+      lb.style.display = 'flex';
+      lb.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function closeLightbox() {
+    const lb = el('proofLightbox');
+    if (lb) {
+      lb.style.display = 'none';
+      lb.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  /**
+   * Export to native Excel (.xlsx) using SheetJS
+   */
+  function exportToExcel() {
+    if (filteredRegistrations.length === 0) {
+      alert('No visible registrations match your filters to export.');
+      return;
+    }
+
+    if (typeof XLSX === 'undefined') {
+      alert('Excel export library (SheetJS) is loading or unavailable. Falling back to CSV export.');
+      exportVisibleToCSV();
+      return;
+    }
+
+    const headers = [
+      'Registration ID',
+      'Student Name',
+      'Register Number',
+      'Department',
+      'Year of Study',
+      'Section',
+      'Email Address',
+      'Phone Number',
+      'Institution',
+      'Technical Event',
+      'Non-Technical Event',
+      'Team Name',
+      'Team Members',
+      'Amount Paid (INR)',
+      'Payment UTR / Trans ID',
+      'Payment Screenshot URL',
+      'Registration Status',
+      'Registration Date & Time'
+    ];
+
+    const rows = filteredRegistrations.map(r => {
+      let teamMembersStr = '';
+      if (r.team_members) {
+        try {
+          const parsed = typeof r.team_members === 'string' ? JSON.parse(r.team_members) : r.team_members;
+          if (Array.isArray(parsed)) {
+            teamMembersStr = parsed.map(m => typeof m === 'object' ? `${m.name} (${m.registerNumber || m.regNo || ''})` : String(m)).join('; ');
+          } else {
+            teamMembersStr = String(r.team_members);
+          }
+        } catch (e) {
+          teamMembersStr = String(r.team_members);
+        }
+      }
+
+      return [
+        r.registration_id || r.id || '',
+        r.full_name || '',
+        r.register_number || '',
+        r.department || '',
+        r.year || '',
+        r.section || '',
+        r.email || '',
+        r.phone || '',
+        r.institution || 'The Kavery Engineering College (Autonomous)',
+        r.technical_event_name || r.event_name || '',
+        r.non_technical_event_name || '',
+        r.team_name || 'Solo',
+        teamMembersStr,
+        Number(r.amount_paid || 100),
+        r.payment_transaction_id || '',
+        r.payment_screenshot_url || '',
+        (r.status || 'registered').toUpperCase(),
+        r.registration_date ? new Date(r.registration_date).toLocaleString('en-IN') : ''
+      ];
+    });
+
+    const worksheetData = [headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Apply readable column widths
+    ws['!cols'] = [
+      { wch: 18 }, // Reg ID
+      { wch: 22 }, // Name
+      { wch: 16 }, // Roll No
+      { wch: 10 }, // Dept
+      { wch: 12 }, // Year
+      { wch: 8 },  // Sec
+      { wch: 26 }, // Email
+      { wch: 14 }, // Phone
+      { wch: 34 }, // Institution
+      { wch: 22 }, // Tech Event
+      { wch: 22 }, // Non Tech Event
+      { wch: 16 }, // Team Name
+      { wch: 32 }, // Team Members
+      { wch: 18 }, // Amount Paid
+      { wch: 24 }, // UTR
+      { wch: 45 }, // Screenshot URL
+      { wch: 14 }, // Status
+      { wch: 22 }  // Date
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Registrations');
+
+    const dateStr = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `ZENTRIX2026_Registrations_${dateStr}.xlsx`);
+  }
+
   /**
    * Client-side RFC4180 CSV Export of currently visible registrations
    */
@@ -554,7 +774,6 @@
       return;
     }
 
-    // All 12 requested columns
     const headers = [
       'Registration ID',
       'Name',
@@ -564,8 +783,13 @@
       'Section',
       'Email',
       'Phone',
-      'Event',
+      'Institution',
+      'Technical Event',
+      'Non-Technical Event',
       'Team',
+      'Amount Paid',
+      'Payment UTR',
+      'Payment Screenshot URL',
       'Status',
       'Registration Date'
     ];
@@ -585,8 +809,13 @@
       escapeCsv(r.section || ''),
       escapeCsv(r.email),
       escapeCsv(r.phone),
-      escapeCsv(r.event_name),
+      escapeCsv(r.institution || 'The Kavery Engineering College (Autonomous)'),
+      escapeCsv(r.technical_event_name || r.event_name),
+      escapeCsv(r.non_technical_event_name || ''),
       escapeCsv(r.team_name || 'Solo'),
+      escapeCsv(r.amount_paid || 100),
+      escapeCsv(r.payment_transaction_id || ''),
+      escapeCsv(r.payment_screenshot_url || ''),
       escapeCsv(r.status || 'registered'),
       escapeCsv(r.registration_date)
     ]);
@@ -655,10 +884,16 @@
       refreshBtn.addEventListener('click', fetchRegistrations);
     }
 
+    // Export Excel button
+    const exportExcelBtn = el('exportExcelBtn');
+    if (exportExcelBtn) {
+      exportExcelBtn.addEventListener('click', exportToExcel);
+    }
+
     // Export CSV button
-    const exportBtn = el('exportCsvBtn');
-    if (exportBtn) {
-      exportBtn.addEventListener('click', exportVisibleToCSV);
+    const exportCsvBtn = el('exportCsvBtn');
+    if (exportCsvBtn) {
+      exportCsvBtn.addEventListener('click', exportVisibleToCSV);
     }
 
     // Modal Close handlers
@@ -675,8 +910,18 @@
       });
     }
 
+    // Lightbox Close handlers
+    const lightboxCloseBtn = el('lightboxCloseBtn');
+    const lightboxBackdrop = el('proofLightboxBackdrop');
+
+    if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+    if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeDetailModal();
+      if (e.key === 'Escape') {
+        closeLightbox();
+        closeDetailModal();
+      }
     });
   }
 
@@ -685,6 +930,9 @@
     openDetailModal: openDetailModal,
     closeDetailModal: closeDetailModal,
     updateRecordStatus: updateRecordStatus,
+    openLightbox: openLightbox,
+    closeLightbox: closeLightbox,
+    exportToExcel: exportToExcel,
     refresh: fetchRegistrations
   };
 

@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ZENTRIX 2026 - Official Internal College Event of The Kavery Engineering College (Autonomous), Mecheri, Salem District, Tamil Nadu. Organized by CSE, IT and AI & DS departments.">
-  <title>ZENTRIX 2026 | The Kavery Engineering College (Autonomous)</title>
+  <meta name="description"
+    content="ZENTRIX 2K26 - Official Internal College Event of The Kavery Engineering College (Autonomous), Mecheri, Salem District, Tamil Nadu. Organized by CSE, IT and AI & DS departments.">
+  <title>ZENTRIX 2K26 | The Kavery Engineering College (Autonomous)</title>
 
-  <!-- Favicon Placeholder -->
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2fe' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>" type="image/svg+xml">
+  <!-- Favicon using College Crest Logo -->
+  <link rel="icon" href="assets/logo.png" type="image/png">
 
   <!-- Google Fonts & Stylesheets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=buttons-hit-area-1">
   <link rel="stylesheet" href="css/animations.css?v=buttons-hit-area-2">
 
   <!-- Supabase JS Client v2 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
   <!-- Animated Ambient Background Glowing Orbs -->
@@ -27,10 +35,11 @@
   <header class="header">
     <div class="container nav-container">
       <a href="index.html" class="nav-brand">
-        <img src="assets/logo.png" alt="Kavery Emblem" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300f2fe\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
+        <img src="assets/logo.png" alt="Kavery Emblem" class="brand-logo"
+          onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300f2fe\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
         <div class="brand-info">
           <h1 class="gradient-gold">THE KAVERY ENGINEERING COLLEGE</h1>
-          <span>(AUTONOMOUS) &bull; MECHERI, SALEM</span>
+          <span>(AUTONOMOUS) &bull; MECHERI, SALEM ,645453</span>
         </div>
       </a>
 
@@ -49,25 +58,36 @@
   <!-- Hero Section -->
   <section class="hero" id="home">
     <div class="container">
-      <div class="hero-college-top">THE KAVERY ENGINEERING COLLEGE</div>
-      <div class="hero-college-sub">(AUTONOMOUS) &bull; MECHERI, SALEM DISTRICT</div>
+      <div class="hero-college-top">
+        <span class="organizing-label">PRESENTS BY ORGANIZING DEPARTMENTS</span>
+      </div>
+      <div class="hero-college-sub" aria-label="Departments of CSE, IT, and AI & DS">
+        <span class="dept-badge dept-cse">CSE</span>
+        <span class="dept-sep">&bull;</span>
+        <span class="dept-badge dept-it">IT</span>
+        <span class="dept-sep">&bull;</span>
+        <span class="dept-badge dept-aids">AI &amp; DS</span>
+      </div>
 
-      <div class="hero-edition-badge">⚡ INTERNAL COLLEGE EDITION</div>
+      <div class="hero-edition-badge">⚡ National Level Symposium</div>
 
-      <h1 class="hero-title gradient-text">ZENTRIX 2026</h1>
+      <h1 class="hero-title gradient-text">ZENTRIX 2K26</h1>
       <p class="hero-tagline">IGNITE IDEAS. INNOVATE FUTURE.</p>
 
       <div class="hero-meta-strip">
         <div class="meta-item">
-          <span>📅 Date:</span> <strong>24 SEPTEMBER 2026</strong>
+          <span>📅 Event Date:</span> <strong>24 SEPTEMBER 2026</strong>
+        </div>
+        <div class="meta-item meta-item-deadline">
+          <span>⏳ Registration Closes:</span> <strong style="color:var(--accent-gold);">21 SEPTEMBER 2026</strong>
         </div>
         <div class="meta-item">
-          <span>📍 Venue:</span> <strong>TKEC</strong>
+          <span>📍 Venue:</span> <strong>TKEC MECHERI</strong>
         </div>
       </div>
 
       <div class="hero-internal-note">
-        🔒 ONLY FOR KAVERY ENGINEERING COLLEGE STUDENTS
+        🔒 ONLY FOR THE KAVERY ENGINEERING COLLEGE STUDENTS
       </div>
 
       <div class="hero-actions" data-reveal>
@@ -77,24 +97,56 @@
     </div>
   </section>
 
-  <!-- Event Quick Info Grid Section -->
-  <section class="section" style="padding-top: 1rem;">
+  <!-- Registration Deadline & Live Running Countdown Timer Section -->
+  <section class="deadline-section" id="registration-deadline">
     <div class="container">
-      <div class="info-cards-grid" data-reveal="stagger">
-        <div class="info-card">
-          <div class="info-card-label">DATE</div>
-          <div class="info-card-val">24 September 2026</div>
+      <div class="deadline-countdown-card glass-card" data-reveal="zoom">
+        <div class="deadline-header">
+          <div class="deadline-badge-pill">
+            <span class="pulse-dot"></span>
+            REGISTRATION CLOSING DEADLINE
+          </div>
+          <h2 class="deadline-date-text">
+            21 SEPTEMBER <span class="gradient-gold">2026</span>
+          </h2>
+          <p class="deadline-note">Registration strictly closes when the timer hits zero. Reserve your seat and register
+            now!</p>
         </div>
 
-        <div class="info-card">
-          <div class="info-card-label">VENUE</div>
-          <div class="info-card-val">The Kavery Engineering College</div>
+        <!-- Live Running Countdown Timer -->
+        <div class="countdown-grid" id="regCountdown">
+          <div class="countdown-card">
+            <span class="countdown-val" id="cdDays">00</span>
+            <span class="countdown-lbl">DAYS</span>
+          </div>
+          <div class="countdown-col-sep">:</div>
+          <div class="countdown-card">
+            <span class="countdown-val" id="cdHours">00</span>
+            <span class="countdown-lbl">HOURS</span>
+          </div>
+          <div class="countdown-col-sep">:</div>
+          <div class="countdown-card">
+            <span class="countdown-val" id="cdMinutes">00</span>
+            <span class="countdown-lbl">MINUTES</span>
+          </div>
+          <div class="countdown-col-sep">:</div>
+          <div class="countdown-card">
+            <span class="countdown-val" id="cdSeconds">00</span>
+            <span class="countdown-lbl">SECONDS</span>
+          </div>
         </div>
 
-  
-
-
-      
+        <div class="deadline-actions">
+          <a href="register.html" class="btn btn-gold btn-lg">REGISTER BEFORE DEADLINE &rarr;</a>
+          <a href="https://chat.whatsapp.com/CVT6pFeq0fv79B0ny8onQF" target="_blank" rel="noopener noreferrer"
+            class="btn btn-outline btn-lg whatsapp-join-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path
+                d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.074-2.127-.504-1.704-.689-2.793-2.427-2.877-2.542-.085-.114-.689-.918-.689-1.752 0-.834.439-1.244.596-1.415.157-.171.343-.214.458-.214.114 0 .229.004.329.009.106.006.248-.041.387.291.144.344.492 1.203.535 1.29.043.086.072.186.014.3-.057.114-.086.186-.171.286-.086.1-.182.224-.26.3-.086.086-.176.18-.076.353.1.171.444.733.953 1.186.655.583 1.206.764 1.378.85.171.086.271.071.372-.043.1-.114.429-.501.544-.673.114-.171.229-.143.386-.086.157.057.994.469 1.165.555.171.086.286.129.329.2.043.072.043.418-.101.823z" />
+            </svg>
+            JOIN WHATSAPP GROUP
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -112,11 +164,14 @@
         <div class="event-8-card">
           <span class="event-number">01</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
           </div>
           <h3 class="event-8-title">STARTUP SPARK <span class="event-format-label">PPT</span></h3>
           <p class="event-8-tagline">Pitch your ideas. Ignite the future.</p>
-          <p class="event-8-desc">Present your disruptive business models, innovative prototype concepts, and tech startup pitches before expert judges.</p>
+          <p class="event-8-desc">Present your disruptive business models, innovative prototype concepts, and tech
+            startup pitches before expert judges.</p>
           <a href="register.html?event=startup-spark" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -124,11 +179,15 @@
         <div class="event-8-card">
           <span class="event-number">02</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
           </div>
           <h3 class="event-8-title">PROJECT EXPO</h3>
           <p class="event-8-tagline">Innovate. Build. Exhibit.</p>
-          <p class="event-8-desc">Demonstrate working hardware, software, or IoT prototypes developed during your academic journey to win top honours.</p>
+          <p class="event-8-desc">Demonstrate working hardware, software, or IoT prototypes developed during your
+            academic journey to win top honours.</p>
           <a href="register.html?event=project-expo" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -136,11 +195,15 @@
         <div class="event-8-card">
           <span class="event-number">03</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
           </div>
           <h3 class="event-8-title">BUG HUNTERS</h3>
           <p class="event-8-tagline">Find the bugs. Fix the world.</p>
-          <p class="event-8-desc">High-speed debugging challenge. Diagnose memory leaks, syntax errors, and logic flaws in code snippets across multiple languages.</p>
+          <p class="event-8-desc">High-speed debugging challenge. Diagnose memory leaks, syntax errors, and logic flaws
+            in code snippets across multiple languages.</p>
           <a href="register.html?event=bug-hunters" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -148,11 +211,15 @@
         <div class="event-8-card">
           <span class="event-number">04</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
           </div>
           <h3 class="event-8-title">PROMPT MASTER</h3>
           <p class="event-8-tagline">Think smart. Prompt sharp.</p>
-          <p class="event-8-desc">Craft precise generative AI prompts to generate targeted code, complex images, and technical solutions against live benchmarks.</p>
+          <p class="event-8-desc">Craft precise generative AI prompts to generate targeted code, complex images, and
+            technical solutions against live benchmarks.</p>
           <a href="register.html?event=prompt-master" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -160,11 +227,15 @@
         <div class="event-8-card">
           <span class="event-number">05</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+            </svg>
           </div>
           <h3 class="event-8-title">CINESPARK <span class="event-format-label">SHORT FILM</span></h3>
           <p class="event-8-tagline">Lights. Camera. Action!</p>
-          <p class="event-8-desc">Short film and cinematic storytelling contest showcasing campus creativity, direction, cinematography, and editing skills.</p>
+          <p class="event-8-desc">Short film and cinematic storytelling contest showcasing campus creativity, direction,
+            cinematography, and editing skills.</p>
           <a href="register.html?event=cinespark" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -172,11 +243,15 @@
         <div class="event-8-card">
           <span class="event-number">06</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
           <h3 class="event-8-title">MEME CREATION</h3>
           <p class="event-8-tagline">Create it. Share it. Rule it!</p>
-          <p class="event-8-desc">Unleash your humor and tech satire. Design original memes on engineering life, coding struggles, and modern tech trends.</p>
+          <p class="event-8-desc">Unleash your humor and tech satire. Design original memes on engineering life, coding
+            struggles, and modern tech trends.</p>
           <a href="register.html?event=meme-creation" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -184,11 +259,15 @@
         <div class="event-8-card">
           <span class="event-number">07</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
           </div>
           <h3 class="event-8-title">LOGO HUNTING</h3>
           <p class="event-8-tagline">Design the identity. Define the brand.</p>
-          <p class="event-8-desc">Branding and logo design challenge. Identify hidden tech corporate logos or craft new visual identities for futuristic products.</p>
+          <p class="event-8-desc">Branding and logo design challenge. Identify hidden tech corporate logos or craft new
+            visual identities for futuristic products.</p>
           <a href="register.html?event=logo-hunting" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
 
@@ -196,11 +275,15 @@
         <div class="event-8-card">
           <span class="event-number">08</span>
           <div class="event-icon-box">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
           </div>
           <h3 class="event-8-title">VIDEO QUIZ</h3>
           <p class="event-8-tagline">Watch. Think. Answer. Win!</p>
-          <p class="event-8-desc">Visual observation and tech trivia quiz based on fast-paced video clips, technical inventions, and science history.</p>
+          <p class="event-8-desc">Visual observation and tech trivia quiz based on fast-paced video clips, technical
+            inventions, and science history.</p>
           <a href="register.html?event=video-quiz" class="btn btn-primary btn-sm">Register Now &rarr;</a>
         </div>
       </div>
@@ -212,12 +295,17 @@
     <div class="container">
       <div class="about-box" data-reveal="zoom">
         <div>
-          <h2 class="section-title text-left" style="text-align: left;">ABOUT <span class="gradient-text">ZENTRIX 2026</span></h2>
+          <h2 class="section-title text-left" style="text-align: left;">ABOUT <span class="gradient-text">ZENTRIX
+              2K26</span></h2>
           <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 1.05rem;">
-            <strong>ZENTRIX 2026</strong> is a premier one-day technical and non-technical event organized by the departments of <strong>CSE, IT and AI & DS</strong> at <strong>The Kavery Engineering College (Autonomous)</strong>.
+            <strong>ZENTRIX 2K26</strong> is a premier one-day technical and non-technical event organized by the
+            departments of <strong>CSE, IT and AI & DS</strong> at <strong>The Kavery Engineering College
+              (Autonomous)</strong>.
           </p>
           <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Designed exclusively for internal college students, it serves as a launchpad for young engineers to showcase innovative projects, test algorithmic speed, demonstrate prompt engineering skills, and compete in engaging non-technical arenas.
+            Designed exclusively for internal college students, it serves as a launchpad for young engineers to showcase
+            innovative projects, test algorithmic speed, demonstrate prompt engineering skills, and compete in engaging
+            non-technical arenas.
           </p>
           <div class="about-depts">
             <span class="dept-badge">Department of CSE</span>
@@ -252,19 +340,22 @@
         <div class="why-card">
           <span class="why-icon">🏆</span>
           <h3 class="why-title">SHOWCASE YOUR SKILLS</h3>
-          <p class="why-desc">Demonstrate your coding, prompt engineering, and design talent in front of faculty & peer mentors.</p>
+          <p class="why-desc">Demonstrate your coding, prompt engineering, and design talent in front of faculty & peer
+            mentors.</p>
         </div>
 
         <div class="why-card">
           <span class="why-icon">⚡</span>
           <h3 class="why-title">COMPETE WITH YOUR PEERS</h3>
-          <p class="why-desc">Engage in high-energy technical challenges against top minds across CSE, IT, and AI & DS departments.</p>
+          <p class="why-desc">Engage in high-energy technical challenges against top minds across CSE, IT, and AI & DS
+            departments.</p>
         </div>
 
         <div class="why-card">
           <span class="why-icon">🥇</span>
           <h3 class="why-title">WIN RECOGNITION</h3>
-          <p class="why-desc">Earn certificates of excellence, trophies, and official recognition from the institution.</p>
+          <p class="why-desc">Earn certificates of excellence, trophies, and official recognition from the institution.
+          </p>
         </div>
 
         <div class="why-card">
@@ -307,8 +398,26 @@
           <h3>📞 Coordinator Contact</h3>
           <div class="contact-info-list">
             <p><strong>Staff Coordinator:</strong> [Soundarya / 7904708317]</p>
+            <p><strong>Student Coordinator:</strong> [Aabith / 7010183579]</p>
             <p><strong>Student Coordinator:</strong> [praveen / 8940021088]</p>
+
             <p><strong>Official Email:</strong> zentrix2k2six@gmail.com</p>
+          </div>
+        </div>
+
+        <div class="contact-card whatsapp-contact-card">
+          <h3>💬 WhatsApp Community</h3>
+          <div class="contact-info-list">
+            <p><strong>Official Group:</strong> ZENTRIX 2K26</p>
+            <p><strong>Support:</strong> Instant event updates & queries</p>
+            <a href="https://chat.whatsapp.com/CVT6pFeq0fv79B0ny8onQF" target="_blank" rel="noopener noreferrer"
+              class="btn btn-outline btn-sm whatsapp-join-btn" style="margin-top:0.75rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path
+                  d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.074-2.127-.504-1.704-.689-2.793-2.427-2.877-2.542-.085-.114-.689-.918-.689-1.752 0-.834.439-1.244.596-1.415.157-.171.343-.214.458-.214.114 0 .229.004.329.009.106.006.248-.041.387.291.144.344.492 1.203.535 1.29.043.086.072.186.014.3-.057.114-.086.186-.171.286-.086.1-.182.224-.26.3-.086.086-.176.18-.076.353.1.171.444.733.953 1.186.655.583 1.206.764 1.378.85.171.086.271.071.372-.043.1-.114.429-.501.544-.673.114-.171.229-.143.386-.086.157.057.994.469 1.165.555.171.086.286.129.329.2.043.072.043.418-.101.823z" />
+              </svg>
+              JOIN WHATSAPP GROUP
+            </a>
           </div>
         </div>
       </div>
@@ -320,7 +429,7 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-brand">
-          <h3 class="gradient-gold">ZENTRIX 2026</h3>
+          <h3 class="gradient-gold">ZENTRIX 2K26</h3>
           <p>The Kavery Engineering College (Autonomous)</p>
         </div>
 
@@ -339,10 +448,22 @@
     </div>
   </footer>
 
+  <!-- Floating WhatsApp Quick Connect Button -->
+  <a href="https://chat.whatsapp.com/CVT6pFeq0fv79B0ny8onQF" target="_blank" rel="noopener noreferrer"
+    class="floating-whatsapp-btn" title="Join ZENTRIX 2K26 WhatsApp Group" aria-label="Join WhatsApp Group">
+    <svg viewBox="0 0 24 24" width="32" height="32" fill="#ffffff">
+      <path
+        d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.074-2.127-.504-1.704-.689-2.793-2.427-2.877-2.542-.085-.114-.689-.918-.689-1.752 0-.834.439-1.244.596-1.415.157-.171.343-.214.458-.214.114 0 .229.004.329.009.106.006.248-.041.387.291.144.344.492 1.203.535 1.29.043.086.072.186.014.3-.057.114-.086.186-.171.286-.086.1-.182.224-.26.3-.086.086-.176.18-.076.353.1.171.444.733.953 1.186.655.583 1.206.764 1.378.85.171.086.271.071.372-.043.1-.114.429-.501.544-.673.114-.171.229-.143.386-.086.157.057.994.469 1.165.555.171.086.286.129.329.2.043.072.043.418-.101.823z" />
+      <path
+        d="M12 2C6.477 2 2 6.477 2 12c0 1.891.526 3.662 1.438 5.178L2 22l4.981-1.393A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.182c-1.637 0-3.167-.478-4.455-1.302l-.32-.206-3.308.925.928-3.234-.21-.334A8.151 8.151 0 0 1 3.818 12c0-4.512 3.67-8.182 8.182-8.182 4.512 0 8.182 3.67 8.182 8.182 0 4.512-3.67 8.182-8.182 8.182z" />
+    </svg>
+  </a>
+
   <!-- Core Scripts -->
   <script src="js/config.js"></script>
   <script src="js/app.js?v=homepage-buttons-1"></script>
   <script src="js/events.js"></script>
   <script src="js/animations.js" defer></script>
 </body>
+
 </html>
