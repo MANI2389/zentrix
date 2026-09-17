@@ -77,7 +77,7 @@ function initNavigation() {
 }
 
 /**
- * Countdown Timer to Registration Deadline: September 21, 2026
+ * Countdown Timer to Registration Deadline: September 26, 2026
  */
 function initCountdownTimer() {
   const daysEl = document.getElementById('cdDays');
@@ -87,7 +87,7 @@ function initCountdownTimer() {
 
   if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
 
-  const targetDate = new Date(window.SYMPOSIUM_META?.registrationDeadline || '2026-09-21T23:59:59+05:30').getTime();
+  const targetDate = new Date(window.SYMPOSIUM_META?.registrationDeadline || '2026-09-26T23:59:59+05:30').getTime();
 
   function updateTimer() {
     const now = new Date().getTime();

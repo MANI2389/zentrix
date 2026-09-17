@@ -203,7 +203,7 @@
     // Subtitle badge
     ctx.font = '700 12px "Inter", sans-serif';
     ctx.fillStyle = '#00f2fe';
-    ctx.fillText('ZENTRIX 2K26 INTERNAL REGISTRATION PASS • 24 SEPTEMBER 2026', 48, 160);
+    ctx.fillText('ZENTRIX 2K26 INTERNAL REGISTRATION PASS • 28 SEPTEMBER 2026', 48, 160);
 
     // ── 6. ID & Status Badge (Top Right) ──
     const idBoxX = width - 330;
@@ -278,7 +278,7 @@
 
     // Row 4
     drawField('Registration Issued', registrationData.date, col1X, startY + rowGap * 3, false);
-    drawField('ZENTRIX Event Date', '24 September 2026 (Thursday)', col2X, startY + rowGap * 3, false, '#ffd700');
+    drawField('ZENTRIX Event Date', '28 September 2026 (Monday)', col2X, startY + rowGap * 3, false, '#ffd700');
 
     // ── 9. Bottom Notice Banner ──
     const footerY = height - 76;

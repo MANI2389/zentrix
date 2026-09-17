@@ -2,7 +2,7 @@
 
 > **The Kavery Engineering College (Autonomous)**  
 > Mecheri, Salem District, Tamil Nadu — 636 453  
-> **Event Date: 24 September 2026**
+> **Event Date: 28 September 2026**
 > *Phase 1: Internal College Event (CSE, IT, AI & DS)*
 
 ---
@@ -252,6 +252,6 @@ Follow these exact steps to launch the symposium portal to production on Vercel 
 - **Institution:** The Kavery Engineering College (Autonomous)
 - **Campus:** Kavery Knowledge Park, Mecheri, Salem District, Tamil Nadu — 636 453
 - **Organizing Departments:** Computer Science & Engineering (CSE), Information Technology (IT), Artificial Intelligence & Data Science (AI & DS)
-- **Event Date:** 24 September 2026
+- **Event Date:** 28 September 2026
 
 *ZENTRIX 2026 — IGNITE IDEAS. INNOVATE FUTURE.*

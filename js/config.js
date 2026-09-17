@@ -34,10 +34,10 @@ const SYMPOSIUM_META = {
   eventName   : 'ZENTRIX 2K26',
   collegeName : 'THE KAVERY ENGINEERING COLLEGE (AUTONOMOUS)',
   location    : 'M.Kalipatti, Mecheri, Salem - 636453, Tamil Nadu',
-  eventDate   : '2026-09-24T09:00:00+05:30',   // 24 Sep 2026, 09:00 AM IST
-  eventDateLabel: '24 September 2026',
-  registrationDeadline: '2026-09-21T23:59:59+05:30', // 21 Sep 2026, 11:59:59 PM IST
-  registrationDeadlineLabel: '21 September 2026',
+  eventDate   : '2026-09-28T09:00:00+05:30',   // 28 Sep 2026, 09:00 AM IST
+  eventDateLabel: '28 September 2026',
+  registrationDeadline: '2026-09-26T23:59:59+05:30', // 26 Sep 2026, 11:59:59 PM IST
+  registrationDeadlineLabel: '26 September 2026',
   registrationFee: 100,
   upiId      : 'vasukixlnc@okaxis',
   accountName: 'Vasuki Rajkumar',

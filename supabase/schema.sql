@@ -4,7 +4,7 @@
 -- Mecheri, Salem District, Tamil Nadu
 --
 -- Phase 1: Internal College Event
--- Event Date: 24 September 2026
+-- Event Date: 28 September 2026
 --
 -- Instructions:
 --   1. Open your Supabase project → SQL Editor
