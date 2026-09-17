@@ -778,10 +778,20 @@ select.form-control option {
 /* Team Members Dynamic Fields */
 .team-member-row {
   display: grid;
-  grid-template-columns: 95px minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 105px minmax(0, 1fr) minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   margin-bottom: 0.85rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.team-member-row:hover {
+  border-color: rgba(0, 242, 254, 0.25);
+  background: rgba(0, 242, 254, 0.03);
 }
 
 .team-member-row .form-control {
@@ -798,6 +808,64 @@ select.form-control option {
   border-radius: var(--radius-sm);
   white-space: nowrap;
   text-align: center;
+}
+
+.remove-member-btn {
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.35);
+  color: #ff4757;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.remove-member-btn:hover {
+  background: rgba(255, 71, 87, 0.25);
+  border-color: #ff4757;
+  color: #ffffff;
+}
+
+.add-member-btn {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--border-gold);
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.add-member-btn:hover:not(:disabled) {
+  background: var(--accent-gold);
+  color: #0b0d17;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.add-member-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .team-member-row {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  .team-member-row .remove-member-btn {
+    justify-self: end;
+  }
 }
 
 /* Consent Box */

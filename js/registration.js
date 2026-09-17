@@ -293,11 +293,14 @@
       if (sectionNum) sectionNum.textContent = '05';
 
       var sizeHint = el('teamSizeHint');
-      var maxTeamMembers = 3;
       if (sizeHint) sizeHint.textContent = '(Max 3 members per team: Leader + up to 2 extra members)';
 
-      // Build 2 extra member fields (Leader is Member 1, so Member 2 & 3)
-      buildTeamMemberFields(2);
+      var leaderDisplay = el('leaderNameDisplay');
+      if (leaderDisplay) {
+        leaderDisplay.textContent = val('studentName') || 'Main Participant (Details from Section 1)';
+      }
+
+      updateAddMemberButtonState();
 
       var tn = el('teamName');
       if (tn) tn.required = true;
@@ -316,6 +319,7 @@
 
       var membersContainer = el('teamMembersContainer');
       if (membersContainer) membersContainer.innerHTML = '';
+      updateAddMemberButtonState();
     }
 
     updatePaymentTotal();
@@ -323,58 +327,123 @@
     updateStepIndicatorAuto();
   }
 
-  function buildTeamMemberFields(count) {
+  function addTeamMemberRow() {
     var container = el('teamMembersContainer');
     if (!container) return;
-    container.innerHTML = '';
 
-    for (var i = 1; i <= count; i++) {
-      var memberNum = i + 1; // Leader is Member 1, so additional inputs are Member 2 & 3
-      var row = document.createElement('div');
-      row.className = 'team-member-row';
-      row.innerHTML =
-        '<span class="team-member-num">Member ' + memberNum + '</span>' +
-        '<input' +
-        '  type="text"' +
-        '  id="teamMemberName_' + i + '"' +
-        '  name="teamMemberName_' + i + '"' +
-        '  class="form-control"' +
-        '  placeholder="Member ' + memberNum + ' full name"' +
-        '  maxlength="120"' +
-        '  autocomplete="off"' +
-        '  aria-label="Member ' + memberNum + ' full name"' +
-        '>' +
-        '<input' +
-        '  type="text"' +
-        '  id="teamMemberReg_' + i + '"' +
-        '  name="teamMemberReg_' + i + '"' +
-        '  class="form-control"' +
-        '  placeholder="Member ' + memberNum + ' register number"' +
-        '  maxlength="20"' +
-        '  autocomplete="off"' +
-        '  aria-label="Member ' + memberNum + ' register number"' +
-        '>';
-      container.appendChild(row);
+    var rows = container.querySelectorAll('.team-member-row');
+    if (rows.length >= 2) return; // Max 2 extra members (Leader + 2 extra = 3 max)
 
-      row.querySelectorAll('input').forEach(function (input) {
-        input.addEventListener('input', function () {
-          updatePaymentTotal();
-          updateSummary();
-        });
+    var memberNum = rows.length + 2; // Member 2, then Member 3
+    var row = document.createElement('div');
+    row.className = 'team-member-row';
+    row.setAttribute('data-member-num', memberNum);
+    row.innerHTML =
+      '<span class="team-member-num">Member ' + memberNum + '</span>' +
+      '<input' +
+      '  type="text"' +
+      '  class="form-control member-name-input"' +
+      '  placeholder="Member ' + memberNum + ' full name"' +
+      '  maxlength="120"' +
+      '  autocomplete="off"' +
+      '  aria-label="Member ' + memberNum + ' full name"' +
+      '  required' +
+      '>' +
+      '<input' +
+      '  type="text"' +
+      '  class="form-control member-reg-input"' +
+      '  placeholder="Member ' + memberNum + ' register number"' +
+      '  maxlength="20"' +
+      '  autocomplete="off"' +
+      '  aria-label="Member ' + memberNum + ' register number"' +
+      '  required' +
+      '>' +
+      '<button type="button" class="remove-member-btn" title="Remove Member ' + memberNum + '" aria-label="Remove Member ' + memberNum + '">' +
+      '  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' +
+      '  <span>Remove</span>' +
+      '</button>';
+
+    container.appendChild(row);
+
+    // Remove button listener
+    var removeBtn = row.querySelector('.remove-member-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', function () {
+        row.remove();
+        reindexTeamMembers();
+        updateAddMemberButtonState();
+        updatePaymentTotal();
+        updateSummary();
       });
+    }
+
+    // Input listeners to clear errors and update summary
+    row.querySelectorAll('input').forEach(function (input) {
+      input.addEventListener('input', function () {
+        input.classList.remove('is-invalid');
+        updateSummary();
+      });
+    });
+
+    // Auto-focus name input of newly added member
+    var nameInput = row.querySelector('.member-name-input');
+    if (nameInput) nameInput.focus();
+
+    updateAddMemberButtonState();
+    updatePaymentTotal();
+    updateSummary();
+  }
+
+  function reindexTeamMembers() {
+    var container = el('teamMembersContainer');
+    if (!container) return;
+    var rows = container.querySelectorAll('.team-member-row');
+    rows.forEach(function (row, idx) {
+      var num = idx + 2;
+      row.setAttribute('data-member-num', num);
+      var numBadge = row.querySelector('.team-member-num');
+      if (numBadge) numBadge.textContent = 'Member ' + num;
+      var nameInput = row.querySelector('.member-name-input');
+      if (nameInput) {
+        nameInput.placeholder = 'Member ' + num + ' full name';
+        nameInput.setAttribute('aria-label', 'Member ' + num + ' full name');
+      }
+      var regInput = row.querySelector('.member-reg-input');
+      if (regInput) {
+        regInput.placeholder = 'Member ' + num + ' register number';
+        regInput.setAttribute('aria-label', 'Member ' + num + ' register number');
+      }
+      var removeBtn = row.querySelector('.remove-member-btn');
+      if (removeBtn) {
+        removeBtn.title = 'Remove Member ' + num;
+        removeBtn.setAttribute('aria-label', 'Remove Member ' + num);
+      }
+    });
+  }
+
+  function updateAddMemberButtonState() {
+    var addBtn = el('addMemberBtn');
+    var limitMsg = el('teamMemberLimitMsg');
+    var container = el('teamMembersContainer');
+    var count = container ? container.querySelectorAll('.team-member-row').length : 0;
+    if (addBtn) {
+      if (count >= 2) {
+        addBtn.disabled = true;
+        addBtn.style.display = 'none';
+        if (limitMsg) limitMsg.style.display = 'block';
+      } else {
+        addBtn.disabled = false;
+        addBtn.style.display = 'inline-flex';
+        if (limitMsg) limitMsg.style.display = 'none';
+      }
     }
   }
 
   function getTeamMemberCount() {
+    var teamSection = el('section-team');
+    if (!teamSection || teamSection.style.display === 'none') return 0;
     var rows = document.querySelectorAll('.team-member-row');
-    var completeMembers = 0;
-    rows.forEach(function (row) {
-      var inputs = row.querySelectorAll('input');
-      if (inputs.length === 2 && inputs[0].value.trim() && inputs[1].value.trim()) {
-        completeMembers++;
-      }
-    });
-    return completeMembers;
+    return rows.length;
   }
 
   function getFeePerHead() {
@@ -386,7 +455,9 @@
     var countEl = el('participantCountDisplay');
     var participantCount = 1 + getTeamMemberCount();
     var fee = getFeePerHead();
-    if (totalEl) totalEl.textContent = '₹' + (participantCount * fee);
+    var totalAmount = participantCount * fee;
+
+    if (totalEl) totalEl.textContent = '₹' + totalAmount;
     if (countEl) {
       countEl.textContent = participantCount + (participantCount === 1 ? ' participant' : ' participants');
     }
@@ -395,20 +466,20 @@
   function validateTeamMembers() {
     var valid = true;
     document.querySelectorAll('.team-member-row').forEach(function (row) {
-      var inputs = row.querySelectorAll('input');
-      if (inputs.length !== 2) return;
-      var nameInput = inputs[0];
-      var regInput = inputs[1];
+      var nameInput = row.querySelector('.member-name-input');
+      var regInput = row.querySelector('.member-reg-input');
+      if (!nameInput || !regInput) return;
+
       var hasName = nameInput.value.trim().length > 0;
       var hasReg = regInput.value.trim().length > 0;
       nameInput.classList.remove('is-invalid');
       regInput.classList.remove('is-invalid');
-      if (hasName !== hasReg) {
-        nameInput.classList.toggle('is-invalid', !hasName);
-        regInput.classList.toggle('is-invalid', !hasReg);
+
+      if (!hasName || !hasReg) {
+        if (!hasName) nameInput.classList.add('is-invalid');
+        if (!hasReg) regInput.classList.add('is-invalid');
         valid = false;
-      }
-      if (hasReg && !REGNO_RE.test(regInput.value.trim())) {
+      } else if (!REGNO_RE.test(regInput.value.trim())) {
         regInput.classList.add('is-invalid');
         valid = false;
       }
@@ -515,6 +586,25 @@
           if (errEl) errEl.textContent = '';
         }
         updateSummary();
+      });
+    }
+
+    // Add Member Button
+    var addBtn = el('addMemberBtn');
+    if (addBtn) {
+      addBtn.addEventListener('click', function () {
+        addTeamMemberRow();
+      });
+    }
+
+    // Student Name update for Leader card in Team Section
+    var studentNameInput = el('studentName');
+    if (studentNameInput) {
+      studentNameInput.addEventListener('input', function () {
+        var leaderDisplay = el('leaderNameDisplay');
+        if (leaderDisplay) {
+          leaderDisplay.textContent = studentNameInput.value.trim() || 'Main Participant (Details from Section 1)';
+        }
       });
     }
   }
@@ -988,16 +1078,17 @@
     // Collect additional team member names and register numbers (leader is Member 1, up to 2 extra)
     var teamMembers = [];
     if (isTeam) {
-      for (var i = 1; i <= 2; i++) {
-        var memberNameInput = el('teamMemberName_' + i);
-        var memberRegInput = el('teamMemberReg_' + i);
+      var memberRows = document.querySelectorAll('.team-member-row');
+      memberRows.forEach(function (row) {
+        var memberNameInput = row.querySelector('.member-name-input');
+        var memberRegInput = row.querySelector('.member-reg-input');
         if (memberNameInput && memberRegInput && memberNameInput.value.trim() && memberRegInput.value.trim()) {
           teamMembers.push({
             name: memberNameInput.value.trim(),
             registerNumber: memberRegInput.value.trim().toUpperCase()
           });
         }
-      }
+      });
     }
 
     var participantCount = 1 + teamMembers.length;
