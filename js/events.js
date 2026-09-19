@@ -181,8 +181,35 @@ const SYMPOSIUM_EVENTS = [
   }
 ];
 
+// Optional/Opt-out Choices for single-track participation
+const OPT_OUT_EVENTS = [
+  {
+    id: 'only-non-technical',
+    name: 'ONLY NON TECHNICAL',
+    tagline: 'Participate in Non-Technical events only',
+    description: 'Opt out of Technical events and participate only in non-technical events.',
+    type: 'TECHNICAL',
+    teamBased: false,
+    minTeamMembers: 1,
+    maxTeamMembers: 1,
+    isOptOut: true
+  },
+  {
+    id: 'only-technical',
+    name: 'ONLY TECHNICAL',
+    tagline: 'Participate in Technical events only',
+    description: 'Opt out of Non-Technical events and participate only in technical events.',
+    type: 'NON_TECHNICAL',
+    teamBased: false,
+    minTeamMembers: 1,
+    maxTeamMembers: 1,
+    isOptOut: true
+  }
+];
+
 // Expose globally
 window.SYMPOSIUM_EVENTS = SYMPOSIUM_EVENTS;
+window.OPT_OUT_EVENTS = OPT_OUT_EVENTS;
 
 /**
  * Get Event By ID or Name Helper
@@ -190,7 +217,8 @@ window.SYMPOSIUM_EVENTS = SYMPOSIUM_EVENTS;
 function getEventById(eventId) {
   if (!eventId) return null;
   const clean = decodeURIComponent(eventId).toLowerCase().trim();
-  return SYMPOSIUM_EVENTS.find(e => 
+  const allEvents = [...SYMPOSIUM_EVENTS, ...OPT_OUT_EVENTS];
+  return allEvents.find(e => 
     e.id.toLowerCase() === clean || 
     e.name.toLowerCase() === clean ||
     e.id.replace(/-/g, '').toLowerCase() === clean.replace(/[^a-z0-9]/g, '')

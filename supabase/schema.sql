@@ -375,11 +375,17 @@ DECLARE
   v_event_name      TEXT;
 BEGIN
   -- Compute primary event identifier & readable compound name
-  v_event_id := COALESCE(NULLIF(trim(p_technical_event_id), ''), NULLIF(trim(p_event_id), ''), 'zentrix-2026');
-  
-  IF NULLIF(trim(p_technical_event_name), '') IS NOT NULL AND NULLIF(trim(p_non_technical_event_name), '') IS NOT NULL THEN
+  IF trim(COALESCE(p_technical_event_id, '')) = 'only-non-technical' THEN
+    v_event_id := COALESCE(NULLIF(trim(p_non_technical_event_id), ''), NULLIF(trim(p_event_id), ''), 'zentrix-2026');
+    v_event_name := COALESCE(NULLIF(trim(p_non_technical_event_name), ''), NULLIF(trim(p_event_name), ''), 'ZENTRIX 2K26');
+  ELSIF trim(COALESCE(p_non_technical_event_id, '')) = 'only-technical' THEN
+    v_event_id := COALESCE(NULLIF(trim(p_technical_event_id), ''), NULLIF(trim(p_event_id), ''), 'zentrix-2026');
+    v_event_name := COALESCE(NULLIF(trim(p_technical_event_name), ''), NULLIF(trim(p_event_name), ''), 'ZENTRIX 2K26');
+  ELSIF NULLIF(trim(p_technical_event_name), '') IS NOT NULL AND NULLIF(trim(p_non_technical_event_name), '') IS NOT NULL THEN
+    v_event_id := COALESCE(NULLIF(trim(p_technical_event_id), ''), NULLIF(trim(p_event_id), ''), 'zentrix-2026');
     v_event_name := trim(p_technical_event_name) || ' & ' || trim(p_non_technical_event_name);
   ELSE
+    v_event_id := COALESCE(NULLIF(trim(p_technical_event_id), ''), NULLIF(trim(p_event_id), ''), 'zentrix-2026');
     v_event_name := COALESCE(NULLIF(trim(p_technical_event_name), ''), NULLIF(trim(p_event_name), ''), 'ZENTRIX 2K26');
   END IF;
 

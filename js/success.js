@@ -261,8 +261,17 @@
     }
 
     // Row 1
+    let passEventTitle = registrationData.event;
+    if (registrationData.event === 'ONLY NON TECHNICAL' && registrationData.nonTechnicalEvent) {
+      passEventTitle = registrationData.nonTechnicalEvent + ' (Non-Tech Only)';
+    } else if (registrationData.nonTechnicalEvent === 'ONLY TECHNICAL' && registrationData.event) {
+      passEventTitle = registrationData.event + ' (Technical Only)';
+    } else if (registrationData.event && registrationData.nonTechnicalEvent) {
+      passEventTitle = registrationData.event + ' & ' + registrationData.nonTechnicalEvent;
+    }
+
     drawField('Student Name', registrationData.name, col1X, startY, true, '#ffffff');
-    drawField('Selected Event', registrationData.event, col2X, startY, true, '#00f2fe');
+    drawField('Selected Event', passEventTitle, col2X, startY, true, '#00f2fe');
 
     // Row 2
     drawField('Register Number', registrationData.roll, col1X, startY + rowGap, false);

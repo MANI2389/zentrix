@@ -136,7 +136,7 @@
     var steps   = document.querySelectorAll('.form-steps .step');
     var lines   = document.querySelectorAll('.form-steps .step-line');
     var personal = checkPersonalSectionFilled();
-    var hasEvent = !!(selectedTechnicalId && selectedNonTechnicalId);
+    var hasEvent = !!(selectedTechnicalId && selectedNonTechnicalId && !(selectedTechnicalId === 'only-non-technical' && selectedNonTechnicalId === 'only-technical'));
     var screenshotInput = el('paymentScreenshot');
     var hasScreenshot = !!(screenshotInput && screenshotInput.files && screenshotInput.files[0]);
     var hasPayment = val('transactionId').length >= 6 && hasScreenshot;
@@ -200,17 +200,53 @@
       var events = window.SYMPOSIUM_EVENTS.filter(function (event) {
         return event.type === type;
       });
+
+      // Append custom single-track options requested by organizers
+      if (type === 'TECHNICAL') {
+        events = events.concat([{
+          id: 'only-non-technical',
+          name: 'ONLY NON TECHNICAL',
+          number: '05',
+          tagline: 'Participate in Non-Technical events only (Skip Technical)',
+          description: 'Opt out of Technical events and participate exclusively in Non-Technical competitions.',
+          type: 'TECHNICAL',
+          badgeText: 'NON-TECH ONLY',
+          badgeClass: 'type-opt-out',
+          teamBased: false,
+          minTeamMembers: 1,
+          maxTeamMembers: 1,
+          isOptOut: true,
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>'
+        }]);
+      } else if (type === 'NON_TECHNICAL') {
+        events = events.concat([{
+          id: 'only-technical',
+          name: 'ONLY TECHNICAL',
+          number: '05',
+          tagline: 'Participate in Technical events only (Skip Non-Technical)',
+          description: 'Opt out of Non-Technical events and participate exclusively in Technical competitions.',
+          type: 'NON_TECHNICAL',
+          badgeText: 'TECH ONLY',
+          badgeClass: 'type-opt-out',
+          teamBased: false,
+          minTeamMembers: 1,
+          maxTeamMembers: 1,
+          isOptOut: true,
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>'
+        }]);
+      }
+
       var grid = document.createElement('div');
       grid.className = 'event-selector-grid-inner';
 
       events.forEach(function (event) {
-      var typeClass = 'type-' + event.type;
-      var teamLabel = event.teamBased
-        ? 'Team &bull; max ' + event.maxTeamMembers
-        : 'Individual';
+      var typeClass = event.badgeClass || ('type-' + event.type);
+      var teamLabel = event.isOptOut
+        ? (event.tagline || 'Single track option')
+        : (event.teamBased ? 'Team &bull; max ' + event.maxTeamMembers : 'Individual');
 
       var card = document.createElement('label');
-      card.className = 'event-selector-card';
+      card.className = 'event-selector-card' + (event.isOptOut ? ' card-opt-out' : '');
       card.setAttribute('for', 'event_' + event.id);
       card.setAttribute('title', event.name);
 
@@ -231,7 +267,7 @@
         '    <span class="event-selector-name">' + esc(event.name) + '</span>' +
         '    <span class="event-selector-tagline">' + teamLabel + '</span>' +
         '    <span class="event-selector-type ' + typeClass + '">' +
-               esc(event.type.replace(/_/g, ' ')) +
+               esc(event.badgeText || event.type.replace(/_/g, ' ')) +
         '    </span>' +
         '  </div>' +
         '</div>';
@@ -263,9 +299,29 @@
     if (type === 'TECHNICAL') {
       selectedTechnicalId = event.id;
       currentTechnicalData = event;
+
+      // Mutual exclusivity: if selecting "ONLY NON TECHNICAL", clear "ONLY TECHNICAL" in non-tech if chosen
+      if (event.id === 'only-non-technical' && selectedNonTechnicalId === 'only-technical') {
+        selectedNonTechnicalId = null;
+        currentNonTechnicalData = null;
+        var nonTechRadio = el('event_only-technical');
+        if (nonTechRadio) nonTechRadio.checked = false;
+        var nonTechStatusEl = el('nonTechnicalSelectionStatus');
+        if (nonTechStatusEl) nonTechStatusEl.textContent = '0/1 selected';
+      }
     } else {
       selectedNonTechnicalId = event.id;
       currentNonTechnicalData = event;
+
+      // Mutual exclusivity: if selecting "ONLY TECHNICAL", clear "ONLY NON TECHNICAL" in tech if chosen
+      if (event.id === 'only-technical' && selectedTechnicalId === 'only-non-technical') {
+        selectedTechnicalId = null;
+        currentTechnicalData = null;
+        var techRadio = el('event_only-non-technical');
+        if (techRadio) techRadio.checked = false;
+        var techStatusEl = el('technicalSelectionStatus');
+        if (techStatusEl) techStatusEl.textContent = '0/1 selected';
+      }
     }
 
     var technicalStatus = el('technicalSelectionStatus');
@@ -726,7 +782,11 @@
 
     if (!selectedTechnicalId || !selectedNonTechnicalId) {
       var evtErr = el('event-error');
-      if (evtErr) evtErr.textContent = 'Please select exactly one Technical and one Non-Technical event.';
+      if (evtErr) evtErr.textContent = 'Please choose your preference for both Technical and Non-Technical events.';
+      ok = false;
+    } else if (selectedTechnicalId === 'only-non-technical' && selectedNonTechnicalId === 'only-technical') {
+      var evtErr2 = el('event-error');
+      if (evtErr2) evtErr2.textContent = 'You cannot select both "Only Non Technical" and "Only Technical". Please choose at least one active event to participate in.';
       ok = false;
     }
 
@@ -792,7 +852,8 @@
       '<div class="summary-item"><span class="summary-label">UTR / Trans. ID</span>' + '<span class="summary-val">' + esc(utr) + '</span></div>';
 
     var complete = (name !== '—' && roll !== '—' && dept !== '—' && yr !== '—' && institution !== '—' &&
-                   technicalName !== '—' && nonTechnicalName !== '—');
+                   technicalName !== '—' && nonTechnicalName !== '—' &&
+                   !(selectedTechnicalId === 'only-non-technical' && selectedNonTechnicalId === 'only-technical'));
     summaryDiv.style.display = complete ? '' : 'none';
   }
 
@@ -1132,7 +1193,20 @@
       var techName = currentTechnicalData ? currentTechnicalData.name : null;
       var nonTechId   = currentNonTechnicalData ? currentNonTechnicalData.id : null;
       var nonTechName = currentNonTechnicalData ? currentNonTechnicalData.name : null;
-      var combinedEventName = techName && nonTechName ? techName + ' & ' + nonTechName : (techName || nonTechName || 'ZENTRIX 2K26');
+
+      var combinedEventName;
+      var primaryEventId;
+
+      if (techId === 'only-non-technical') {
+        combinedEventName = nonTechName || 'Non-Technical Event';
+        primaryEventId = nonTechId || 'zentrix-2026';
+      } else if (nonTechId === 'only-technical') {
+        combinedEventName = techName || 'Technical Event';
+        primaryEventId = techId || 'zentrix-2026';
+      } else {
+        combinedEventName = techName && nonTechName ? (techName + ' & ' + nonTechName) : (techName || nonTechName || 'ZENTRIX 2K26');
+        primaryEventId = techId || nonTechId || 'zentrix-2026';
+      }
 
       var payload = {
         full_name                 : fullName,
@@ -1150,7 +1224,7 @@
         non_technical_event_id    : nonTechId,
         non_technical_event_name  : nonTechName,
         amount_paid               : totalAmountPaid,
-        event_id                  : techId || 'zentrix-2026',
+        event_id                  : primaryEventId,
         event_name                : combinedEventName,
         team_name                 : teamName,
         team_members              : teamMembers.length > 0 ? JSON.stringify(teamMembers) : null,
