@@ -37,6 +37,26 @@
   }
 
   /**
+   * Safely parse team_members column (can be JSON array, JSON string, or comma-separated)
+   */
+  function parseTeamMembers(raw) {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === 'object' && raw !== null) return [raw];
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+      if (typeof parsed === 'object' && parsed !== null) return [parsed];
+      return [];
+    } catch (e) {
+      if (typeof raw === 'string' && raw.trim()) {
+        return raw.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean).map(s => ({ name: s, registerNumber: '' }));
+      }
+      return [];
+    }
+  }
+
+  /**
    * Set and show status/error notice
    */
   function showNotice(msg, type) {
@@ -276,13 +296,20 @@
     }
 
     filteredRegistrations = allRegistrations.filter(r => {
-      // 1. Search by Student Name, Register Number, Email, UTR, Phone, RegID
+      // 1. Search by Student Name, Register Number, Email, UTR, Phone, RegID, Team Name, and Team Member details
       const name = (r.full_name || '').toLowerCase();
       const roll = (r.register_number || '').toLowerCase();
       const email = (r.email || '').toLowerCase();
       const regId = (r.registration_id || '').toLowerCase();
       const utr = (r.payment_transaction_id || '').toLowerCase();
       const phone = (r.phone || '').toLowerCase();
+      const team = (r.team_name || '').toLowerCase();
+      const members = parseTeamMembers(r.team_members);
+      const membersText = members.map(m => {
+        const mName = typeof m === 'object' && m ? (m.name || m.full_name || '') : String(m || '');
+        const mReg = typeof m === 'object' && m ? (m.registerNumber || m.register_number || m.rollNumber || m.regNo || '') : '';
+        return `${mName} ${mReg}`;
+      }).join(' ').toLowerCase();
 
       const matchesSearch = !q || (
         name.includes(q) ||
@@ -290,7 +317,9 @@
         email.includes(q) ||
         regId.includes(q) ||
         utr.includes(q) ||
-        phone.includes(q)
+        phone.includes(q) ||
+        team.includes(q) ||
+        membersText.includes(q)
       );
 
       // 2. Filter by Event (check primary event_id, technical_event_id, and non_technical_event_id)
@@ -362,9 +391,47 @@
       const yearSec = section ? `${year} (${section})` : year;
       const techName = escapeHtml(r.technical_event_name || r.event_name || '—');
       const nonTechName = escapeHtml(r.non_technical_event_name || '—');
-      const teamName = r.team_name ? escapeHtml(r.team_name) : '<span class="text-muted">Solo</span>';
       const amount = escapeHtml(String(r.amount_paid || 100));
       const status = (r.status || 'registered').toLowerCase();
+
+      // Team & Members formatting for table cell
+      const members = parseTeamMembers(r.team_members);
+      let teamHtml = '';
+
+      if (r.team_name || members.length > 0) {
+        const tName = r.team_name ? escapeHtml(r.team_name) : 'Team';
+        const totalPax = 1 + members.length;
+        
+        let membersPreview = '';
+        if (members.length > 0) {
+          membersPreview = members.map((m, i) => {
+            const mName = typeof m === 'object' && m ? (m.name || m.full_name || 'Member') : String(m || '');
+            const mReg = typeof m === 'object' && m ? (m.registerNumber || m.register_number || m.rollNumber || m.regNo || '') : '';
+            return `
+              <div class="team-member-sub" title="Member ${i + 2}: ${escapeHtml(mName)}${mReg ? ` (${escapeHtml(mReg)})` : ''}">
+                <span class="m-num">M${i + 2}:</span> <strong>${escapeHtml(mName)}</strong>${mReg ? ` <code class="m-reg">${escapeHtml(mReg)}</code>` : ''}
+              </div>
+            `;
+          }).join('');
+        }
+
+        teamHtml = `
+          <div class="table-team-box">
+            <div class="team-name-row">
+              <strong class="table-team-name">${tName}</strong>
+              <span class="team-count-badge">${totalPax} members</span>
+            </div>
+            ${membersPreview ? `
+              <div class="table-members-snippet">
+                <div class="team-leader-sub" title="Team Leader (Member 1)"><span class="m-num">Lead:</span> ${escapeHtml(r.full_name || '')}</div>
+                ${membersPreview}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else {
+        teamHtml = '<span class="text-muted">Solo</span>';
+      }
 
       // Payment proof cell
       let proofHtml = '<span class="no-proof-text">—</span>';
@@ -418,7 +485,7 @@
           <td class="cell-nowrap">${yearSec}</td>
           <td><strong class="event-name-cell">${techName}</strong></td>
           <td><strong class="event-name-cell">${nonTechName}</strong></td>
-          <td>${teamName}</td>
+          <td>${teamHtml}</td>
           <td><span class="amount-cell">₹${amount}</span></td>
           <td>${proofHtml}</td>
           <td><span class="status-chip ${chipClass}">${escapeHtml(status.toUpperCase())}</span></td>
@@ -484,21 +551,55 @@
     const teamBox = el('modalTeamBox');
     const teamDetails = el('modalTeamDetails');
     if (teamDetails) {
-      if (record.team_name) {
-        let membersHtml = '';
-        if (record.team_members) {
-          try {
-            const parsed = typeof record.team_members === 'string' ? JSON.parse(record.team_members) : record.team_members;
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              membersHtml = `<div class="team-members-list">Members: ${parsed.map(m => `<code class="member-chip">${escapeHtml(m)}</code>`).join(' ')}</div>`;
-            }
-          } catch (e) {
-            membersHtml = `<div class="team-members-list">Members: ${escapeHtml(record.team_members)}</div>`;
-          }
-        }
-        teamDetails.innerHTML = `<strong>${escapeHtml(record.team_name)}</strong> ${membersHtml}`;
+      const members = parseTeamMembers(record.team_members);
+      if (record.team_name || members.length > 0) {
+        const teamNameStr = record.team_name ? escapeHtml(record.team_name) : 'Team (No Name Specified)';
+        const totalPax = 1 + members.length;
+
+        let membersCardsHtml = `
+          <div class="modal-member-card leader-card">
+            <span class="member-role-badge leader-badge">👑 Team Leader (Member 1)</span>
+            <div class="member-card-info">
+              <strong class="member-card-name">${escapeHtml(record.full_name || '—')}</strong>
+              <code class="member-card-reg">${escapeHtml(record.register_number || '—')}</code>
+            </div>
+          </div>
+        `;
+
+        members.forEach((m, idx) => {
+          const mName = typeof m === 'object' && m ? (m.name || m.full_name || 'Member') : String(m || '');
+          const mReg = typeof m === 'object' && m ? (m.registerNumber || m.register_number || m.rollNumber || m.regNo || '—') : '—';
+          membersCardsHtml += `
+            <div class="modal-member-card">
+              <span class="member-role-badge">Member ${idx + 2}</span>
+              <div class="member-card-info">
+                <strong class="member-card-name">${escapeHtml(mName)}</strong>
+                <code class="member-card-reg">${escapeHtml(mReg)}</code>
+              </div>
+            </div>
+          `;
+        });
+
+        teamDetails.innerHTML = `
+          <div class="modal-team-wrapper">
+            <div class="modal-team-header">
+              <div class="modal-team-title-wrap">
+                <span class="team-label-tag">TEAM NAME</span>
+                <strong class="modal-team-name-big">${teamNameStr}</strong>
+              </div>
+              <span class="modal-team-size-badge">👥 ${totalPax} Total Members</span>
+            </div>
+            <div class="modal-team-members-grid">
+              ${membersCardsHtml}
+            </div>
+          </div>
+        `;
       } else {
-        teamDetails.textContent = 'Individual Participant (No Team)';
+        teamDetails.innerHTML = `
+          <div class="solo-participant-badge">
+            <span>👤 Individual Participant (Solo Registration — No Team)</span>
+          </div>
+        `;
       }
     }
 
@@ -697,19 +798,12 @@
     ];
 
     const rows = filteredRegistrations.map(r => {
-      let teamMembersStr = '';
-      if (r.team_members) {
-        try {
-          const parsed = typeof r.team_members === 'string' ? JSON.parse(r.team_members) : r.team_members;
-          if (Array.isArray(parsed)) {
-            teamMembersStr = parsed.map(m => typeof m === 'object' ? `${m.name} (${m.registerNumber || m.regNo || ''})` : String(m)).join('; ');
-          } else {
-            teamMembersStr = String(r.team_members);
-          }
-        } catch (e) {
-          teamMembersStr = String(r.team_members);
-        }
-      }
+      const members = parseTeamMembers(r.team_members);
+      let teamMembersStr = members.map(m => {
+        const mName = typeof m === 'object' && m ? (m.name || m.full_name || '') : String(m || '');
+        const mReg = typeof m === 'object' && m ? (m.registerNumber || m.register_number || m.rollNumber || m.regNo || '') : '';
+        return mReg ? `${mName} (${mReg})` : mName;
+      }).filter(Boolean).join('; ');
 
       return [
         r.registration_id || r.id || '',
@@ -786,7 +880,8 @@
       'Institution',
       'Technical Event',
       'Non-Technical Event',
-      'Team',
+      'Team Name',
+      'Team Members',
       'Amount Paid',
       'Payment UTR',
       'Payment Screenshot URL',
@@ -800,25 +895,35 @@
       return `"${str}"`;
     }
 
-    const rows = filteredRegistrations.map(r => [
-      escapeCsv(r.registration_id || r.id),
-      escapeCsv(r.full_name),
-      escapeCsv(r.register_number),
-      escapeCsv(r.department),
-      escapeCsv(r.year),
-      escapeCsv(r.section || ''),
-      escapeCsv(r.email),
-      escapeCsv(r.phone),
-      escapeCsv(r.institution || 'The Kavery Engineering College (Autonomous)'),
-      escapeCsv(r.technical_event_name || r.event_name),
-      escapeCsv(r.non_technical_event_name || ''),
-      escapeCsv(r.team_name || 'Solo'),
-      escapeCsv(r.amount_paid || 100),
-      escapeCsv(r.payment_transaction_id || ''),
-      escapeCsv(r.payment_screenshot_url || ''),
-      escapeCsv(r.status || 'registered'),
-      escapeCsv(r.registration_date)
-    ]);
+    const rows = filteredRegistrations.map(r => {
+      const members = parseTeamMembers(r.team_members);
+      const teamMembersStr = members.map(m => {
+        const mName = typeof m === 'object' && m ? (m.name || m.full_name || '') : String(m || '');
+        const mReg = typeof m === 'object' && m ? (m.registerNumber || m.register_number || m.rollNumber || m.regNo || '') : '';
+        return mReg ? `${mName} (${mReg})` : mName;
+      }).filter(Boolean).join('; ');
+
+      return [
+        escapeCsv(r.registration_id || r.id),
+        escapeCsv(r.full_name),
+        escapeCsv(r.register_number),
+        escapeCsv(r.department),
+        escapeCsv(r.year),
+        escapeCsv(r.section || ''),
+        escapeCsv(r.email),
+        escapeCsv(r.phone),
+        escapeCsv(r.institution || 'The Kavery Engineering College (Autonomous)'),
+        escapeCsv(r.technical_event_name || r.event_name),
+        escapeCsv(r.non_technical_event_name || ''),
+        escapeCsv(r.team_name || 'Solo'),
+        escapeCsv(teamMembersStr || (r.team_name ? 'Solo / None' : '—')),
+        escapeCsv(r.amount_paid || 100),
+        escapeCsv(r.payment_transaction_id || ''),
+        escapeCsv(r.payment_screenshot_url || ''),
+        escapeCsv(r.status || 'registered'),
+        escapeCsv(r.registration_date)
+      ];
+    });
 
     // UTF-8 BOM for perfect Excel / Google Sheets compatibility
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
