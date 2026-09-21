@@ -349,7 +349,7 @@
       if (sectionNum) sectionNum.textContent = '05';
 
       var sizeHint = el('teamSizeHint');
-      if (sizeHint) sizeHint.textContent = '(Max 3 members per team: Leader + up to 2 extra members)';
+      if (sizeHint) sizeHint.textContent = '(Max 4 members per team: Leader + up to 3 extra members)';
 
       var leaderDisplay = el('leaderNameDisplay');
       if (leaderDisplay) {
@@ -388,9 +388,9 @@
     if (!container) return;
 
     var rows = container.querySelectorAll('.team-member-row');
-    if (rows.length >= 2) return; // Max 2 extra members (Leader + 2 extra = 3 max)
+    if (rows.length >= 3) return; // Max 3 extra members (Leader + 3 extra = 4 max)
 
-    var memberNum = rows.length + 2; // Member 2, then Member 3
+    var memberNum = rows.length + 2; // Member 2, Member 3, then Member 4
     var row = document.createElement('div');
     row.className = 'team-member-row';
     row.setAttribute('data-member-num', memberNum);
@@ -483,7 +483,7 @@
     var container = el('teamMembersContainer');
     var count = container ? container.querySelectorAll('.team-member-row').length : 0;
     if (addBtn) {
-      if (count >= 2) {
+      if (count >= 3) {
         addBtn.disabled = true;
         addBtn.style.display = 'none';
         if (limitMsg) limitMsg.style.display = 'block';
@@ -1136,7 +1136,7 @@
                  (currentNonTechnicalData && currentNonTechnicalData.teamBased);
     var teamName = isTeam ? (val('teamName') || null) : null;
 
-    // Collect additional team member names and register numbers (leader is Member 1, up to 2 extra)
+    // Collect additional team member names and register numbers (leader is Member 1, up to 3 extra)
     var teamMembers = [];
     if (isTeam) {
       var memberRows = document.querySelectorAll('.team-member-row');

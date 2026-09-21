@@ -20,12 +20,12 @@ const SYMPOSIUM_EVENTS = [
     department_code: 'CSE / IT / AI&DS',
     teamBased: true,
     minTeamMembers: 1,
-    maxTeamMembers: 3,
+    maxTeamMembers: 4,
     venue: 'Seminar Hall A',
     eventTime: '10:30 AM',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`,
     rules: [
-      'Team Size: 1 to 3 members',
+      'Team Size: 1 to 4 members',
       'Abstract & Slide Deck (Max 10 slides) presented on spot',
       '7 minutes presentation + 3 minutes Q&A with judges',
       'Judged on innovation, market feasibility, and presentation clarity'
@@ -41,12 +41,12 @@ const SYMPOSIUM_EVENTS = [
     department_code: 'CSE / IT / AI&DS',
     teamBased: true,
     minTeamMembers: 1,
-    maxTeamMembers: 3,
+    maxTeamMembers: 4,
     venue: 'Main Tech Lab',
     eventTime: '11:00 AM',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>`,
     rules: [
-      'Team Size: 1 to 3 members',
+      'Team Size: 1 to 4 members',
       'Live working prototype demonstration required',
       'Bring own laptops/hardware; power extension boards provided',
       'Evaluated on technical complexity, functionality, and execution'
@@ -105,12 +105,12 @@ const SYMPOSIUM_EVENTS = [
     department_code: 'ALL DEPARTMENTS',
     teamBased: true,
     minTeamMembers: 1,
-    maxTeamMembers: 3,
+    maxTeamMembers: 4,
     venue: 'Auditorium',
     eventTime: '02:00 PM',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>`,
     rules: [
-      'Team Size: 1 to 3 members',
+      'Team Size: 1 to 4 members',
       'Film duration: 3 to 10 minutes (HD MP4 format)',
       'Must be original work; copyright audio must be credited',
       'Judged on screenplay, direction, sound design, and editing'
@@ -147,12 +147,12 @@ const SYMPOSIUM_EVENTS = [
     department_code: 'ALL DEPARTMENTS',
     teamBased: true,
     minTeamMembers: 1,
-    maxTeamMembers: 3,
+    maxTeamMembers: 4,
     venue: 'Web Lab 2',
     eventTime: '03:00 PM',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`,
     rules: [
-      'Team Size: 1 to 3 members',
+      'Team Size: 1 to 4 members',
       'Round 1: Tech Brand Logo Identification Quiz',
       'Round 2: On-spot vector logo creation challenge',
       'Judged on creativity, typography, and visual brand identity'
@@ -168,12 +168,12 @@ const SYMPOSIUM_EVENTS = [
     department_code: 'ALL DEPARTMENTS',
     teamBased: true,
     minTeamMembers: 1,
-    maxTeamMembers: 3,
+    maxTeamMembers: 4,
     venue: 'Seminar Hall B',
     eventTime: '03:30 PM',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>`,
     rules: [
-      'Team Size: 1 to 3 members',
+      'Team Size: 1 to 4 members',
       'Video clips played on main hall screen',
       'Round 1: Visual observation & recall test',
       'Round 2: Rapid buzzer round'
