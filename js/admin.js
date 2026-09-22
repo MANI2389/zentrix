@@ -234,7 +234,7 @@
     // Calculate total revenue collected
     const totalRevenue = allRegistrations.reduce((sum, r) => {
       const amt = Number(r.amount_paid);
-      return sum + (!isNaN(amt) && amt > 0 ? amt : 100);
+      return sum + (!isNaN(amt) ? amt : 0);
     }, 0);
 
     const statTotalRevenue = el('statTotalRevenue');
@@ -353,7 +353,7 @@
     if (tableTotalRevenue) {
       const filteredRevenue = filteredRegistrations.reduce((sum, r) => {
         const amt = Number(r.amount_paid);
-        return sum + (!isNaN(amt) && amt > 0 ? amt : 100);
+        return sum + (!isNaN(amt) ? amt : 0);
       }, 0);
       tableTotalRevenue.textContent = '₹' + filteredRevenue.toLocaleString('en-IN');
     }
@@ -391,7 +391,7 @@
       const yearSec = section ? `${year} (${section})` : year;
       const techName = escapeHtml(r.technical_event_name || r.event_name || '—');
       const nonTechName = escapeHtml(r.non_technical_event_name || '—');
-      const amount = escapeHtml(String(r.amount_paid || 100));
+      const amount = escapeHtml(String(r.amount_paid != null ? r.amount_paid : 0));
       const status = (r.status || 'registered').toLowerCase();
 
       // Team & Members formatting for table cell
@@ -436,23 +436,25 @@
       // Payment proof cell
       let proofHtml = '<span class="no-proof-text">—</span>';
       const utrStr = r.payment_transaction_id ? escapeHtml(r.payment_transaction_id) : '';
-      const safeImgUrl = r.payment_screenshot_url ? escapeHtml(r.payment_screenshot_url) : '';
+      const safeImgUrl = (r.payment_screenshot_url && r.payment_screenshot_url.startsWith('http')) ? escapeHtml(r.payment_screenshot_url) : '';
       const safeName = escapeHtml(r.full_name || '');
 
       if (safeImgUrl) {
         proofHtml = `
           <div class="proof-cell">
             <img src="${safeImgUrl}" alt="Proof" class="table-proof-thumb" onclick="event.stopPropagation(); window.SYM_ADMIN.openLightbox('${safeImgUrl}', '${utrStr}', '${safeName}')" title="Click to view payment proof receipt">
-            ${utrStr ? `<span class="utr-badge" title="UTR / Trans ID: ${utrStr}">UTR: ${utrStr}</span>` : ''}
+            ${utrStr && utrStr !== 'FREE-ENTRY' ? `<span class="utr-badge" title="UTR / Trans ID: ${utrStr}">UTR: ${utrStr}</span>` : ''}
           </div>
         `;
-      } else if (utrStr) {
+      } else if (utrStr && utrStr !== 'FREE-ENTRY') {
         proofHtml = `
           <div class="proof-cell">
             <span class="no-proof-text">No image</span>
             <span class="utr-badge" title="UTR: ${utrStr}">UTR: ${utrStr}</span>
           </div>
         `;
+      } else if (utrStr === 'FREE-ENTRY') {
+        proofHtml = '<span class="badge" style="background:rgba(0,255,136,0.12);color:#00ff88;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:600;">Free Entry</span>';
       }
 
       // Format registration date
@@ -525,13 +527,16 @@
 
     if (el('modalTechnicalEvent')) el('modalTechnicalEvent').textContent = record.technical_event_name || record.event_name || '—';
     if (el('modalNonTechnicalEvent')) el('modalNonTechnicalEvent').textContent = record.non_technical_event_name || '—';
-    if (el('modalAmountPaid')) el('modalAmountPaid').textContent = `₹${record.amount_paid || 100}`;
-    if (el('modalUtrId')) el('modalUtrId').textContent = record.payment_transaction_id ? `UTR: ${record.payment_transaction_id}` : 'Not Provided';
+    if (el('modalAmountPaid')) el('modalAmountPaid').textContent = `₹${record.amount_paid != null ? record.amount_paid : 0}`;
+    if (el('modalUtrId')) {
+      const utr = record.payment_transaction_id;
+      el('modalUtrId').textContent = (utr && utr !== 'FREE-ENTRY') ? `UTR: ${utr}` : 'Free Registration';
+    }
 
     // Payment proof screenshot in modal
     const proofContainer = el('modalProofContainer');
     if (proofContainer) {
-      if (record.payment_screenshot_url) {
+      if (record.payment_screenshot_url && record.payment_screenshot_url.startsWith('http')) {
         const safeImgUrl = escapeHtml(record.payment_screenshot_url);
         const utrStr = escapeHtml(record.payment_transaction_id || '');
         const safeName = escapeHtml(record.full_name || '');
@@ -543,7 +548,7 @@
           </div>
         `;
       } else {
-        proofContainer.innerHTML = `<span class="no-proof-text">No payment screenshot uploaded</span>`;
+        proofContainer.innerHTML = `<span class="no-proof-text">No payment proof required (Free Registration)</span>`;
       }
     }
 
@@ -819,7 +824,7 @@
         r.non_technical_event_name || '',
         r.team_name || 'Solo',
         teamMembersStr,
-        Number(r.amount_paid || 100),
+        Number(r.amount_paid != null ? r.amount_paid : 0),
         r.payment_transaction_id || '',
         r.payment_screenshot_url || '',
         (r.status || 'registered').toUpperCase(),
@@ -917,7 +922,7 @@
         escapeCsv(r.non_technical_event_name || ''),
         escapeCsv(r.team_name || 'Solo'),
         escapeCsv(teamMembersStr || (r.team_name ? 'Solo / None' : '—')),
-        escapeCsv(r.amount_paid || 100),
+        escapeCsv(r.amount_paid != null ? r.amount_paid : 0),
         escapeCsv(r.payment_transaction_id || ''),
         escapeCsv(r.payment_screenshot_url || ''),
         escapeCsv(r.status || 'registered'),

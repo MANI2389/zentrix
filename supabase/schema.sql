@@ -77,15 +77,15 @@ CREATE TABLE IF NOT EXISTS registrations (
   -- Contact
   email               TEXT          NOT NULL,
   phone               TEXT          NOT NULL,
-  payment_transaction_id TEXT        NOT NULL,
-  payment_screenshot_url TEXT        NOT NULL,
+  payment_transaction_id TEXT          DEFAULT 'FREE-ENTRY',
+  payment_screenshot_url TEXT          DEFAULT 'N/A',
 
   -- Events (Single Row stores both Technical and Non-Technical events)
   technical_event_id     TEXT,
   technical_event_name   TEXT,
   non_technical_event_id TEXT,
   non_technical_event_name TEXT,
-  amount_paid            NUMERIC       DEFAULT 100,
+  amount_paid            NUMERIC       DEFAULT 0,
 
   -- Primary Event (Backward-Compatible)
   event_id            TEXT          NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS registrations (
     CHECK (email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
 
   CONSTRAINT chk_payment_transaction_id
-    CHECK (char_length(trim(payment_transaction_id)) >= 6),
+    CHECK (payment_transaction_id IS NULL OR char_length(trim(payment_transaction_id)) >= 4),
 
   -- Register number: 4–20 alphanumeric characters
   CONSTRAINT chk_register_number
@@ -175,7 +175,27 @@ ALTER TABLE registrations
   ADD COLUMN IF NOT EXISTS non_technical_event_name TEXT;
 
 ALTER TABLE registrations
-  ADD COLUMN IF NOT EXISTS amount_paid NUMERIC DEFAULT 100;
+  ADD COLUMN IF NOT EXISTS amount_paid NUMERIC DEFAULT 0;
+
+ALTER TABLE registrations
+  ALTER COLUMN payment_transaction_id DROP NOT NULL;
+
+ALTER TABLE registrations
+  ALTER COLUMN payment_screenshot_url DROP NOT NULL;
+
+ALTER TABLE registrations
+  ALTER COLUMN amount_paid SET DEFAULT 0;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'chk_payment_transaction_id'
+  ) THEN
+    ALTER TABLE registrations DROP CONSTRAINT chk_payment_transaction_id;
+  END IF;
+  ALTER TABLE registrations ADD CONSTRAINT chk_payment_transaction_id
+    CHECK (payment_transaction_id IS NULL OR char_length(trim(payment_transaction_id)) >= 4);
+END $$;
 
 DO $$
 BEGIN
@@ -351,13 +371,13 @@ CREATE OR REPLACE FUNCTION register_student(
   p_section           TEXT DEFAULT NULL,
   p_email             TEXT DEFAULT NULL,
   p_phone             TEXT DEFAULT NULL,
-  p_payment_transaction_id TEXT DEFAULT NULL,
-  p_payment_screenshot_url TEXT DEFAULT NULL,
+  p_payment_transaction_id TEXT DEFAULT 'FREE-ENTRY',
+  p_payment_screenshot_url TEXT DEFAULT 'N/A',
   p_technical_event_id TEXT DEFAULT NULL,
   p_technical_event_name TEXT DEFAULT NULL,
   p_non_technical_event_id TEXT DEFAULT NULL,
   p_non_technical_event_name TEXT DEFAULT NULL,
-  p_amount_paid       NUMERIC DEFAULT 100,
+  p_amount_paid       NUMERIC DEFAULT 0,
   p_team_name         TEXT DEFAULT NULL,
   p_team_members      TEXT DEFAULT NULL,
   p_event_id          TEXT DEFAULT NULL,
@@ -420,13 +440,13 @@ BEGIN
     NULLIF(trim(p_section), ''),
     lower(trim(p_email)),
     trim(p_phone),
-    trim(p_payment_transaction_id),
-    trim(p_payment_screenshot_url),
+    COALESCE(trim(p_payment_transaction_id), 'FREE-ENTRY'),
+    COALESCE(trim(p_payment_screenshot_url), 'N/A'),
     NULLIF(trim(p_technical_event_id), ''),
     NULLIF(trim(p_technical_event_name), ''),
     NULLIF(trim(p_non_technical_event_id), ''),
     NULLIF(trim(p_non_technical_event_name), ''),
-    COALESCE(p_amount_paid, 100),
+    COALESCE(p_amount_paid, 0),
     v_event_id,
     v_event_name,
     NULLIF(trim(p_team_name), ''),

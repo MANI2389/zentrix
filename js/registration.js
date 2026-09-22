@@ -39,8 +39,6 @@
   const PHONE_RE = /^[6-9][0-9]{9}$/;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const REGNO_RE = /^[A-Za-z0-9]{4,20}$/;
-  const MAX_PAYMENT_SCREENSHOT_BYTES = 5 * 1024 * 1024;
-  const PAYMENT_SCREENSHOT_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 
   /* ──────────────────────────────────────────
      Module State
@@ -137,14 +135,10 @@
     var lines   = document.querySelectorAll('.form-steps .step-line');
     var personal = checkPersonalSectionFilled();
     var hasEvent = !!(selectedTechnicalId && selectedNonTechnicalId && !(selectedTechnicalId === 'only-non-technical' && selectedNonTechnicalId === 'only-technical'));
-    var screenshotInput = el('paymentScreenshot');
-    var hasScreenshot = !!(screenshotInput && screenshotInput.files && screenshotInput.files[0]);
-    var hasPayment = val('transactionId').length >= 6 && hasScreenshot;
 
     var active = 1;
     if (personal) active = 2;
     if (personal && hasEvent) active = 3;
-    if (personal && hasEvent && hasPayment) active = 4;
 
     steps.forEach(function (s, i) {
       var stepNum = i + 1;
@@ -342,11 +336,8 @@
     if (teamEvents.length) {
       teamSection.style.display = '';
 
-      var payNum = el('paymentSectionNum');
-      if (payNum) payNum.textContent = '04';
-
       var sectionNum = el('consentSectionNum');
-      if (sectionNum) sectionNum.textContent = '05';
+      if (sectionNum) sectionNum.textContent = '04';
 
       var sizeHint = el('teamSizeHint');
       if (sizeHint) sizeHint.textContent = '(Max 4 members per team: Leader + up to 3 extra members)';
@@ -364,11 +355,8 @@
     } else {
       teamSection.style.display = 'none';
 
-      var payNum2 = el('paymentSectionNum');
-      if (payNum2) payNum2.textContent = '03';
-
       var sectionNum2 = el('consentSectionNum');
-      if (sectionNum2) sectionNum2.textContent = '04';
+      if (sectionNum2) sectionNum2.textContent = '03';
 
       var tn2 = el('teamName');
       if (tn2) { tn2.required = false; tn2.value = ''; }
@@ -503,20 +491,11 @@
   }
 
   function getFeePerHead() {
-    return (window.SYMPOSIUM_META && window.SYMPOSIUM_META.registrationFee) || 100;
+    return 0;
   }
 
   function updatePaymentTotal() {
-    var totalEl = el('paymentTotal');
-    var countEl = el('participantCountDisplay');
-    var participantCount = 1 + getTeamMemberCount();
-    var fee = getFeePerHead();
-    var totalAmount = participantCount * fee;
-
-    if (totalEl) totalEl.textContent = '₹' + totalAmount;
-    if (countEl) {
-      countEl.textContent = participantCount + (participantCount === 1 ? ' participant' : ' participants');
-    }
+    // Payment option removed - registration is free
   }
 
   function validateTeamMembers() {
@@ -581,7 +560,7 @@
      ────────────────────────────────────────── */
 
   function setupRealTimeValidation() {
-    var blurFields = ['studentName', 'rollNumber', 'department', 'yearOfStudy', 'institution', 'email', 'phone', 'transactionId'];
+    var blurFields = ['studentName', 'rollNumber', 'department', 'yearOfStudy', 'institution', 'email', 'phone'];
 
     blurFields.forEach(function (id) {
       var input = el(id);
@@ -739,14 +718,6 @@
         setValid(id);
         return true;
 
-      case 'transactionId':
-        if (v.length < 6) {
-          setError(id, 'Enter the transaction ID or UTR from your payment receipt.');
-          return false;
-        }
-        setValid(id);
-        return true;
-
       default:
         return true;
     }
@@ -763,22 +734,6 @@
       if (!validateField(id)) ok = false;
     });
     if (val('department') === 'Other' && !validateField('customDepartment')) ok = false;
-
-    if (!validateField('transactionId')) ok = false;
-
-    var screenshot = el('paymentScreenshot');
-    if (!screenshot || !screenshot.files || !screenshot.files[0]) {
-      setError('paymentScreenshot', 'Please upload your payment screenshot.');
-      ok = false;
-    } else if (!PAYMENT_SCREENSHOT_TYPES.includes(screenshot.files[0].type)) {
-      setError('paymentScreenshot', 'Upload a PNG, JPG or WEBP image.');
-      ok = false;
-    } else if (screenshot.files[0].size > MAX_PAYMENT_SCREENSHOT_BYTES) {
-      setError('paymentScreenshot', 'Payment screenshot must be 5MB or smaller.');
-      ok = false;
-    } else {
-      setValid('paymentScreenshot');
-    }
 
     if (!selectedTechnicalId || !selectedNonTechnicalId) {
       var evtErr = el('event-error');
@@ -835,9 +790,6 @@
     var nonTechnicalName = currentNonTechnicalData ? currentNonTechnicalData.name : '—';
 
     var participantCount = 1 + getTeamMemberCount();
-    var fee = getFeePerHead();
-    var totalAmount = '₹' + (participantCount * fee);
-    var utr = val('transactionId') || 'Pending';
 
     summaryContent.innerHTML =
       '<div class="summary-item"><span class="summary-label">Name</span>'        + '<span class="summary-val">' + esc(name)    + '</span></div>' +
@@ -848,8 +800,7 @@
       '<div class="summary-item"><span class="summary-label">Email</span>'       + '<span class="summary-val">' + esc(email)   + '</span></div>' +
       '<div class="summary-item"><span class="summary-label">Technical</span>'   + '<span class="summary-val">' + esc(technicalName) + '</span></div>' +
       '<div class="summary-item"><span class="summary-label">Non-Technical</span>' + '<span class="summary-val">' + esc(nonTechnicalName) + '</span></div>' +
-      '<div class="summary-item"><span class="summary-label">Total Fee</span>'   + '<span class="summary-val" style="color:var(--accent-gold);font-weight:700;">' + esc(totalAmount) + ' (' + participantCount + ' pax)</span></div>' +
-      '<div class="summary-item"><span class="summary-label">UTR / Trans. ID</span>' + '<span class="summary-val">' + esc(utr) + '</span></div>';
+      (participantCount > 1 ? '<div class="summary-item"><span class="summary-label">Team Size</span>' + '<span class="summary-val">' + participantCount + ' members</span></div>' : '');
 
     var complete = (name !== '—' && roll !== '—' && dept !== '—' && yr !== '—' && institution !== '—' &&
                    technicalName !== '—' && nonTechnicalName !== '—' &&
@@ -921,7 +872,7 @@
         p_technical_event_name  : payload.technical_event_name || null,
         p_non_technical_event_id: payload.non_technical_event_id || null,
         p_non_technical_event_name: payload.non_technical_event_name || null,
-        p_amount_paid           : payload.amount_paid || 100,
+        p_amount_paid           : payload.amount_paid != null ? payload.amount_paid : 0,
         p_team_name             : payload.team_name || null,
         p_team_members          : payload.team_members || null,
         p_event_id              : payload.event_id || null,
@@ -950,19 +901,7 @@
     return result.data;
   }
 
-  async function uploadPaymentScreenshot(client, file, registerNumber) {
-    var extension = file.name.split('.').pop().toLowerCase();
-    var path = registerNumber + '/' + Date.now() + '.' + extension;
-    var upload = await client.storage.from('payment-screenshots').upload(path, file, {
-      cacheControl: '3600',
-      contentType: file.type,
-      upsert: false
-    });
-    if (upload.error) throw upload.error;
 
-    var publicUrl = client.storage.from('payment-screenshots').getPublicUrl(path);
-    return publicUrl.data.publicUrl;
-  }
 
   /* ──────────────────────────────────────────
      Error Classification → User-Friendly Messages
@@ -1129,8 +1068,6 @@
     var section      = sectionRaw || null;
     var email        = val('email').toLowerCase();
     var phone        = val('phone');
-    var transactionId = val('transactionId');
-    var paymentScreenshot = el('paymentScreenshot').files[0];
 
     var isTeam = (currentTechnicalData && currentTechnicalData.teamBased) ||
                  (currentNonTechnicalData && currentNonTechnicalData.teamBased);
@@ -1152,8 +1089,7 @@
       });
     }
 
-    var participantCount = 1 + teamMembers.length;
-    var totalAmountPaid = participantCount * 100;
+    var totalAmountPaid = 0;
 
     // ── 3. Get Supabase client ─────────────────────────────────
     var client = typeof window.getSupabaseClient === 'function'
@@ -1185,10 +1121,7 @@
         return;
       }
 
-      // ── 6. Upload payment proof to storage ───────────────────
-      var paymentScreenshotUrl = await uploadPaymentScreenshot(client, paymentScreenshot, regNumber);
-
-      // ── 7. Save single-row registration containing both events ─
+      // ── 6. Save single-row registration containing both events ─
       var techId   = currentTechnicalData ? currentTechnicalData.id : null;
       var techName = currentTechnicalData ? currentTechnicalData.name : null;
       var nonTechId   = currentNonTechnicalData ? currentNonTechnicalData.id : null;
@@ -1217,13 +1150,13 @@
         section                   : section,
         email                     : email,
         phone                     : phone,
-        payment_transaction_id    : transactionId,
-        payment_screenshot_url    : paymentScreenshotUrl,
+        payment_transaction_id    : 'FREE-ENTRY',
+        payment_screenshot_url    : 'N/A',
         technical_event_id        : techId,
         technical_event_name      : techName,
         non_technical_event_id    : nonTechId,
         non_technical_event_name  : nonTechName,
-        amount_paid               : totalAmountPaid,
+        amount_paid               : 0,
         event_id                  : primaryEventId,
         event_name                : combinedEventName,
         team_name                 : teamName,
@@ -1295,72 +1228,6 @@
   }
 
   /* ──────────────────────────────────────────
-     Payment Screenshot Live Preview
-     ────────────────────────────────────────── */
-
-  function setupPaymentScreenshotPreview() {
-    var fileInput = el('paymentScreenshot');
-    var previewContainer = el('paymentScreenshotPreview');
-    var previewImg = el('screenshotPreviewImg');
-    var fileNameSpan = el('screenshotFileName');
-    var removeBtn = el('removeScreenshotBtn');
-
-    if (!fileInput) return;
-
-    fileInput.addEventListener('change', function () {
-      var file = fileInput.files && fileInput.files[0];
-      if (!file) {
-        if (previewContainer) previewContainer.style.display = 'none';
-        updateStepIndicatorAuto();
-        return;
-      }
-
-      if (!PAYMENT_SCREENSHOT_TYPES.includes(file.type)) {
-        setError('paymentScreenshot', 'Upload a PNG, JPG or WEBP image.');
-        fileInput.value = '';
-        if (previewContainer) previewContainer.style.display = 'none';
-        updateStepIndicatorAuto();
-        return;
-      }
-
-      if (file.size > MAX_PAYMENT_SCREENSHOT_BYTES) {
-        setError('paymentScreenshot', 'Payment screenshot must be 5MB or smaller.');
-        fileInput.value = '';
-        if (previewContainer) previewContainer.style.display = 'none';
-        updateStepIndicatorAuto();
-        return;
-      }
-
-      setValid('paymentScreenshot');
-
-      if (previewContainer && previewImg && fileNameSpan) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          previewImg.src = e.target.result;
-          fileNameSpan.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
-          previewContainer.style.display = 'flex';
-        };
-        reader.readAsDataURL(file);
-      }
-
-      updateStepIndicatorAuto();
-      updateSummary();
-    });
-
-    if (removeBtn) {
-      removeBtn.addEventListener('click', function () {
-        fileInput.value = '';
-        if (previewContainer) previewContainer.style.display = 'none';
-        if (previewImg) previewImg.src = '';
-        if (fileNameSpan) fileNameSpan.textContent = '';
-        setError('paymentScreenshot', '');
-        updateStepIndicatorAuto();
-        updateSummary();
-      });
-    }
-  }
-
-  /* ──────────────────────────────────────────
      Init
      ────────────────────────────────────────── */
 
@@ -1375,7 +1242,6 @@
     initNav();
     buildEventSelector();
     setupRealTimeValidation();
-    setupPaymentScreenshotPreview();
 
     // Pre-select event from URL — must run after buildEventSelector
     setTimeout(preselectEventFromURL, 0);

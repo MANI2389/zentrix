@@ -38,7 +38,7 @@ const SYMPOSIUM_META = {
   eventDateLabel: '28 September 2026',
   registrationDeadline: '2026-09-26T23:59:59+05:30', // 26 Sep 2026, 11:59:59 PM IST
   registrationDeadlineLabel: '26 September 2026',
-  registrationFee: 100,
+  registrationFee: 0,
   upiId      : 'vasukixlnc@okaxis',
   accountName: 'Vasuki Rajkumar',
   paymentQr  : 'https://zentrix-rho.vercel.app/qr-code.jpg',

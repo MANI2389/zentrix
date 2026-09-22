@@ -10,7 +10,7 @@
   <link rel="icon" href="assets/logo.png" type="image/png">
 
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/register.css?v=payment-proof-2">
+  <link rel="stylesheet" href="css/register.css?v=free-reg-1">
   <link rel="stylesheet" href="css/animations.css">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -92,11 +92,6 @@
           <div class="step-line"></div>
           <div class="step" id="step-indicator-3">
             <span class="step-num">3</span>
-            <span class="step-label">Payment</span>
-          </div>
-          <div class="step-line"></div>
-          <div class="step" id="step-indicator-4">
-            <span class="step-num">4</span>
             <span class="step-label">Confirm</span>
           </div>
         </div>
@@ -353,11 +348,11 @@
                 <div class="team-members-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
                   <div>
                     <label class="form-label" style="margin-bottom:0.2rem;">Team Members (Max 4 Total)</label>
-                    <p class="field-hint" style="margin-top:0;">You are <strong>Member 1 (Leader)</strong>. Add up to 3 extra members (+₹100/member).</p>
+                    <p class="field-hint" style="margin-top:0;">You are <strong>Member 1 (Leader)</strong>. Add up to 3 extra members.</p>
                   </div>
                   <button type="button" id="addMemberBtn" class="btn btn-outline btn-sm add-member-btn" style="display:inline-flex;align-items:center;gap:0.4rem;">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    <span>+ Add Member (+₹100)</span>
+                    <span>+ Add Member</span>
                   </button>
                 </div>
 
@@ -365,7 +360,6 @@
                 <div class="team-leader-badge" id="teamLeaderBadge" style="display:flex;align-items:center;gap:0.75rem;background:rgba(0,242,254,0.06);border:1px dashed rgba(0,242,254,0.3);padding:0.75rem 1rem;border-radius:var(--radius-sm);margin-bottom:0.85rem;">
                   <span class="team-member-num" style="background:rgba(0,242,254,0.15);">Member 1 (Leader)</span>
                   <span id="leaderNameDisplay" style="color:var(--text-primary);font-weight:600;font-size:0.9rem;">Main Participant (Details from Section 1)</span>
-                  <span style="margin-left:auto;color:var(--accent-gold);font-weight:700;font-size:0.85rem;">₹100</span>
                 </div>
 
                 <div id="teamMembersContainer">
@@ -379,77 +373,10 @@
             </div>
           </div>
 
-          <!-- SECTION: Payment & Verification (Moved to End) -->
-          <div class="form-section" id="section-payment">
-            <h3 class="form-section-title">
-              <span class="section-num" id="paymentSectionNum">03</span>
-              Payment & Verification <span class="required-star">*</span>
-            </h3>
-            <p class="section-desc">
-              Registration fee is <strong>₹100 per participant</strong>. Scan the QR code, pay via UPI, and submit your proof below.
-            </p>
-
-            <div class="payment-panel" aria-labelledby="paymentTitle">
-              <div class="payment-copy">
-                <span class="payment-kicker">REGISTRATION FEE</span>
-                <div class="per-head-fee">₹100 <span>PER HEAD</span></div>
-                <h4 id="paymentTitle">Total Payable: <span id="paymentTotal" class="gradient-gold">₹100</span></h4>
-                <p id="paymentBreakdownNote">₹100 per head × <span id="participantCountDisplay">1 participant</span></p>
-                <div class="payment-details">
-                  <strong>UPI ID: <span id="upiId">vasukixlnc@okaxis</span></strong>
-                  <button type="button" class="btn btn-outline btn-sm" id="copyUpiBtn">COPY UPI ID</button>
-                </div>
-                <p class="payment-account">Account name: Vasuki Rajkumar</p>
-              </div>
-              <div class="payment-qr-container">
-                <img class="payment-qr" src="https://zentrix-rho.vercel.app/qr-code.jpg" alt="UPI payment QR code for registration fee">
-                <span class="payment-qr-caption">Scan with GPay / PhonePe / Paytm</span>
-              </div>
-            </div>
-
-            <div class="payment-proof-panel">
-              <div class="payment-proof-heading">
-                <span class="payment-kicker">STEP 2 &bull; VERIFICATION</span>
-                <h4>Upload Payment Proof</h4>
-                <p>Enter the transaction ID / UTR number from your payment receipt and upload the screenshot.</p>
-              </div>
-              <div class="payment-proof-grid">
-                <div class="form-group">
-                  <label for="transactionId" class="form-label">
-                    Transaction ID / UTR Number <span class="required-star">*</span>
-                  </label>
-                  <input type="text" id="transactionId" name="transactionId" class="form-control"
-                    placeholder="Enter the 12-digit UTR from receipt" maxlength="80" required
-                    aria-required="true" aria-describedby="transactionId-error">
-                  <span class="field-error" id="transactionId-error" role="alert"></span>
-                </div>
-                <div class="form-group">
-                  <label for="paymentScreenshot" class="form-label">
-                    Payment Screenshot <span class="required-star">*</span>
-                  </label>
-                  <input type="file" id="paymentScreenshot" name="paymentScreenshot" class="form-control"
-                    accept="image/png,image/jpeg,image/webp" required aria-required="true"
-                    aria-describedby="paymentScreenshot-error paymentScreenshot-hint">
-                  <span class="field-hint" id="paymentScreenshot-hint">PNG, JPG or WEBP only, maximum 5MB.</span>
-                  <span class="field-error" id="paymentScreenshot-error" role="alert"></span>
-
-                  <!-- Live Image Preview -->
-                  <div id="paymentScreenshotPreview" class="screenshot-preview" style="display:none;">
-                    <img id="screenshotPreviewImg" src="" alt="Payment screenshot preview">
-                    <div class="screenshot-preview-meta">
-                      <span id="screenshotFileName" class="screenshot-filename"></span>
-                      <button type="button" id="removeScreenshotBtn" class="remove-screenshot-btn" aria-label="Remove screenshot">&times; Remove</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- SECTION: Consent & Submit -->
           <div class="form-section" id="section-consent">
             <h3 class="form-section-title">
-              <span class="section-num" id="consentSectionNum">04</span>
+              <span class="section-num" id="consentSectionNum">03</span>
               Confirm & Submit
             </h3>
 
@@ -492,7 +419,7 @@
       </div>
 
       <div class="registration-help">
-        <span>Need payment or event help?</span>
+        <span>Need event or registration help?</span>
         <a class="btn btn-outline btn-sm" href="https://chat.whatsapp.com/CVT6pFeq0fv79B0ny8onQF" target="_blank" rel="noopener">JOIN WHATSAPP GROUP</a>
       </div>
 
@@ -512,7 +439,7 @@
   <script src="js/config.js?v=supabase-url-1"></script>
   <script src="js/events.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/registration.js?v=payment-proof-2"></script>
+  <script src="js/registration.js?v=free-reg-1"></script>
   <script src="js/animations.js" defer></script>
 </body>
 </html>
