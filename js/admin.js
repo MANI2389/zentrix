@@ -218,6 +218,8 @@
    */
   function updateStats() {
     const statTotal = el('statTotal');
+    const statTotalHeadCount = el('statTotalHeadCount');
+    const statHeadCountSub = el('statHeadCountSub');
     const statStartupSpark = el('statStartupSpark');
     const statProjectExpo = el('statProjectExpo');
     const statBugHunters = el('statBugHunters');
@@ -227,9 +229,27 @@
     const statLogoHunting = el('statLogoHunting');
     const statVideoQuiz = el('statVideoQuiz');
 
-    // Total registrations
+    // Total registrations (primary records)
     const total = allRegistrations.length;
     if (statTotal) statTotal.textContent = total;
+
+    // Calculate Total Head Count (1 Lead + Team Members per registration)
+    let totalHeadCount = 0;
+    let totalAdditionalMembers = 0;
+
+    allRegistrations.forEach(r => {
+      const members = parseTeamMembers(r.team_members);
+      totalAdditionalMembers += members.length;
+      totalHeadCount += (1 + members.length);
+    });
+
+    if (statTotalHeadCount) statTotalHeadCount.textContent = totalHeadCount;
+    if (statHeadCountSub) {
+      statHeadCountSub.textContent = `${total} Leads + ${totalAdditionalMembers} Team Members`;
+    }
+
+    const tableTotalHeadCount = el('tableTotalHeadCount');
+    if (tableTotalHeadCount) tableTotalHeadCount.textContent = totalHeadCount;
 
     // Calculate total revenue collected
     const totalRevenue = allRegistrations.reduce((sum, r) => {
@@ -349,6 +369,15 @@
     const recordCountEl = el('recordCount');
     if (recordCountEl) recordCountEl.textContent = filteredRegistrations.length;
 
+    // Filtered Head Count calculation
+    let filteredHeadCount = 0;
+    filteredRegistrations.forEach(r => {
+      const members = parseTeamMembers(r.team_members);
+      filteredHeadCount += (1 + members.length);
+    });
+    const tableTotalHeadCount = el('tableTotalHeadCount');
+    if (tableTotalHeadCount) tableTotalHeadCount.textContent = filteredHeadCount;
+
     const tableTotalRevenue = el('tableTotalRevenue');
     if (tableTotalRevenue) {
       const filteredRevenue = filteredRegistrations.reduce((sum, r) => {
@@ -419,7 +448,7 @@
           <div class="table-team-box">
             <div class="team-name-row">
               <strong class="table-team-name">${tName}</strong>
-              <span class="team-count-badge">${totalPax} members</span>
+              <span class="team-count-badge team-badge">${totalPax} Heads</span>
             </div>
             ${membersPreview ? `
               <div class="table-members-snippet">
@@ -430,7 +459,12 @@
           </div>
         `;
       } else {
-        teamHtml = '<span class="text-muted">Solo</span>';
+        teamHtml = `
+          <div class="team-name-row">
+            <span class="text-muted">Solo</span>
+            <span class="team-count-badge solo-badge">1 Head</span>
+          </div>
+        `;
       }
 
       // Payment proof cell
@@ -793,6 +827,7 @@
       'Institution',
       'Technical Event',
       'Non-Technical Event',
+      'Head Count',
       'Team Name',
       'Team Members',
       'Amount Paid (INR)',
@@ -822,6 +857,7 @@
         r.institution || 'The Kavery Engineering College (Autonomous)',
         r.technical_event_name || r.event_name || '',
         r.non_technical_event_name || '',
+        1 + members.length,
         r.team_name || 'Solo',
         teamMembersStr,
         Number(r.amount_paid != null ? r.amount_paid : 0),
@@ -848,6 +884,7 @@
       { wch: 34 }, // Institution
       { wch: 22 }, // Tech Event
       { wch: 22 }, // Non Tech Event
+      { wch: 12 }, // Head Count
       { wch: 16 }, // Team Name
       { wch: 32 }, // Team Members
       { wch: 18 }, // Amount Paid
@@ -885,6 +922,7 @@
       'Institution',
       'Technical Event',
       'Non-Technical Event',
+      'Head Count',
       'Team Name',
       'Team Members',
       'Amount Paid',
@@ -920,6 +958,7 @@
         escapeCsv(r.institution || 'The Kavery Engineering College (Autonomous)'),
         escapeCsv(r.technical_event_name || r.event_name),
         escapeCsv(r.non_technical_event_name || ''),
+        escapeCsv(1 + members.length),
         escapeCsv(r.team_name || 'Solo'),
         escapeCsv(teamMembersStr || (r.team_name ? 'Solo / None' : '—')),
         escapeCsv(r.amount_paid != null ? r.amount_paid : 0),

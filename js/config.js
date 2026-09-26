@@ -36,8 +36,10 @@ const SYMPOSIUM_META = {
   location    : 'M.Kalipatti, Mecheri, Salem - 636453, Tamil Nadu',
   eventDate   : '2026-09-28T09:00:00+05:30',   // 28 Sep 2026, 09:00 AM IST
   eventDateLabel: '28 September 2026',
-  registrationDeadline: '2026-09-26T23:59:59+05:30', // 26 Sep 2026, 11:59:59 PM IST
-  registrationDeadlineLabel: '26 September 2026',
+  registrationDeadline: '2026-09-26T21:00:00+05:30', // Registration concluded
+  registrationDeadlineLabel: 'Registration Concluded',
+  registrationClosed: true,
+  registrationClosedMessage: 'Online registrations for ZENTRIX 2K26 are officially closed.',
   registrationFee: 0,
   upiId      : 'vasukixlnc@okaxis',
   accountName: 'Vasuki Rajkumar',

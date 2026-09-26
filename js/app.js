@@ -90,6 +90,14 @@ function initCountdownTimer() {
   const targetDate = new Date(window.SYMPOSIUM_META?.registrationDeadline || '2026-09-26T23:59:59+05:30').getTime();
 
   function updateTimer() {
+    if (window.SYMPOSIUM_META && window.SYMPOSIUM_META.registrationClosed) {
+      daysEl.textContent = '00';
+      hoursEl.textContent = '00';
+      minutesEl.textContent = '00';
+      secondsEl.textContent = '00';
+      return;
+    }
+
     const now = new Date().getTime();
     const distance = targetDate - now;
 

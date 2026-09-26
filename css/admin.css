@@ -241,6 +241,22 @@
   background: linear-gradient(90deg, var(--accent-gold), #ff8800);
 }
 
+.metric-card.card-headcount {
+  border: 1px solid rgba(0, 255, 170, 0.45);
+  background: linear-gradient(145deg, rgba(8, 42, 38, 0.9) 0%, rgba(6, 18, 30, 0.95) 100%);
+  box-shadow: 0 12px 35px rgba(0, 255, 170, 0.12);
+}
+
+.metric-card.card-headcount::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00ffaa, #00f2fe, #4facfe);
+}
+
 .metric-label {
   font-family: var(--font-heading);
   font-size: 0.72rem;
@@ -255,6 +271,10 @@
   color: var(--accent-cyan);
 }
 
+.metric-card.card-headcount .metric-label {
+  color: #00ffaa;
+}
+
 .metric-value {
   font-family: var(--font-heading);
   font-size: 2.2rem;
@@ -267,6 +287,12 @@
 .metric-card.card-total .metric-value {
   color: var(--accent-cyan);
   font-size: 2.5rem;
+}
+
+.metric-card.card-headcount .metric-value {
+  color: #00ffaa;
+  font-size: 2.5rem;
+  text-shadow: 0 0 25px rgba(0, 255, 170, 0.35);
 }
 
 .metric-sub {
@@ -568,6 +594,67 @@
   color: #fb923c;
   background: rgba(251, 146, 60, 0.15);
   border: 1px solid rgba(251, 146, 60, 0.45);
+}
+
+/* Team & Headcount Badges */
+.team-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(0, 255, 170, 0.12);
+  border: 1px solid rgba(0, 255, 170, 0.35);
+  color: #00ffaa;
+  white-space: nowrap;
+}
+
+.team-count-badge.solo-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-secondary);
+}
+
+.team-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.table-team-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.table-members-snippet {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.team-member-sub,
+.team-leader-sub {
+  margin-top: 0.15rem;
+}
+
+.m-num {
+  color: var(--accent-gold);
+  font-weight: 700;
+  margin-right: 0.2rem;
+}
+
+.m-reg {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  padding: 0.1rem 0.3rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
 }
 
 /* ──────────────────────────────────────────────────

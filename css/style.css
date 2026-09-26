@@ -1546,3 +1546,45 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.5;
   }
 }
+
+/* ──────────────────────────────────────────────────
+   Registration Closed / Ended States
+   ────────────────────────────────────────────────── */
+.btn-closed,
+.btn-ended {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
+  color: #ff6b6b !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.25) !important;
+  text-decoration: none;
+  cursor: default;
+}
+
+.btn-closed:hover,
+.btn-ended:hover {
+  transform: none !important;
+  background: rgba(239, 68, 68, 0.18) !important;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.4) !important;
+  color: #ff8585 !important;
+}
+
+.badge-ended {
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #ff6b6b !important;
+}
+
+.closed-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  display: inline-block;
+  animation: pulse-red 2s infinite ease-in-out;
+}
+
+@keyframes pulse-red {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}

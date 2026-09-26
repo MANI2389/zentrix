@@ -233,6 +233,8 @@ function renderHomepageEvents() {
   const container = document.querySelector('.events-8-grid');
   if (!container) return;
 
+  const isClosed = !!(window.SYMPOSIUM_META && window.SYMPOSIUM_META.registrationClosed);
+
   container.innerHTML = SYMPOSIUM_EVENTS.map(event => `
     <div class="event-8-card" id="card-${event.id}">
       <span class="event-number">${event.number}</span>
@@ -242,7 +244,10 @@ function renderHomepageEvents() {
       <h3 class="event-8-title">${escapeHtml(event.name)}${event.displayLabel ? ` <span class="event-format-label">${escapeHtml(event.displayLabel)}</span>` : ''}</h3>
       <p class="event-8-tagline">${escapeHtml(event.tagline)}</p>
       <p class="event-8-desc">${escapeHtml(event.description)}</p>
-      <a href="register.html?event=${event.id}" class="btn btn-primary btn-sm">Register Now &rarr;</a>
+      ${isClosed
+        ? `<a href="register.html?event=${event.id}" class="btn btn-closed btn-sm">Registration Closed</a>`
+        : `<a href="register.html?event=${event.id}" class="btn btn-primary btn-sm">Register Now &rarr;</a>`
+      }
     </div>
   `).join('');
 }

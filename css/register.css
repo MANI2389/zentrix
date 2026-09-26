@@ -1192,3 +1192,138 @@ select.form-control option {
   }
 }
 
+/* ──────────────────────────────────────────────────
+   Registration Closed State Card
+   ────────────────────────────────────────────────── */
+.registration-closed-card {
+  max-width: 760px;
+  margin: 1.5rem auto 3.5rem;
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: linear-gradient(160deg, rgba(32, 12, 18, 0.9) 0%, rgba(10, 14, 26, 0.98) 100%);
+  box-shadow: 0 20px 60px rgba(239, 68, 68, 0.18), var(--shadow-glass);
+  position: relative;
+  overflow: hidden;
+}
+
+.registration-closed-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ef4444, #ff8585, #f59e0b);
+}
+
+.closed-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.25rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 50px;
+  color: #ff6b6b;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 1.75rem;
+}
+
+.closed-icon-ring {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.12);
+  border: 2px solid rgba(239, 68, 68, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.75rem;
+  color: #ef4444;
+  box-shadow: 0 0 35px rgba(239, 68, 68, 0.25);
+}
+
+.closed-icon-ring svg {
+  width: 44px;
+  height: 44px;
+}
+
+.closed-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+}
+
+.closed-subtitle {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: #ff8585;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+
+.closed-desc {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.25rem;
+}
+
+.closed-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.25rem;
+  text-align: left;
+}
+
+.closed-info-card {
+  padding: 1.15rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+.closed-info-label {
+  display: block;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.closed-info-value {
+  display: block;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.closed-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .registration-closed-card {
+    padding: 2.25rem 1.25rem;
+  }
+  .closed-actions-row .btn {
+    width: 100%;
+  }
+}
+

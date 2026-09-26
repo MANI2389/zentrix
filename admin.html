@@ -120,10 +120,17 @@
         <div class="metric-card card-total">
           <span class="metric-label">TOTAL REGISTRATIONS</span>
           <span class="metric-value" id="statTotal">0</span>
-          <span class="metric-sub">Technical + Non-Technical</span>
+          <span class="metric-sub">Forms / Primary Leads</span>
         </div>
 
-        <!-- 2. TOTAL REVENUE COLLECTED -->
+        <!-- 2. TOTAL HEAD COUNT (Actual Attending Students: Leads + Team Members) -->
+        <div class="metric-card card-headcount">
+          <span class="metric-label">TOTAL HEAD COUNT</span>
+          <span class="metric-value" id="statTotalHeadCount">0</span>
+          <span class="metric-sub" id="statHeadCountSub">0 Leads + 0 Members</span>
+        </div>
+
+        <!-- 3. TOTAL REVENUE COLLECTED -->
         <div class="metric-card card-revenue">
           <span class="metric-label">TOTAL REVENUE</span>
           <span class="metric-value" id="statTotalRevenue" style="color:var(--accent-gold);">₹0</span>
@@ -272,7 +279,7 @@
     <!-- Table Meta Bar -->
     <div class="table-info-bar">
       <div class="records-count">
-        Showing <strong id="recordCount" style="color:var(--accent-cyan);">0</strong> of <span id="totalRecordCount">0</span> registrations &bull; Total Fees: <strong id="tableTotalRevenue" style="color:var(--accent-gold);">₹0</strong>
+        Showing <strong id="recordCount" style="color:var(--accent-cyan);">0</strong> of <span id="totalRecordCount">0</span> registrations &bull; Total Head Count: <strong id="tableTotalHeadCount" style="color:#00ffaa;">0</strong> attendees &bull; Total Fees: <strong id="tableTotalRevenue" style="color:var(--accent-gold);">₹0</strong>
       </div>
       <div class="table-hint">
         💡 Click any row to view complete student registration details

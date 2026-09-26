@@ -1048,6 +1048,11 @@
     // Prevent double-submit
     if (isSubmitting) return;
 
+    if (window.SYMPOSIUM_META && window.SYMPOSIUM_META.registrationClosed) {
+      showAlert('Registrations for ZENTRIX 2K26 are officially closed. New submissions are no longer accepted.', 'danger');
+      return;
+    }
+
     clearAlert();
 
     // ── 1. Client-side validation ──────────────────────────────
@@ -1232,6 +1237,16 @@
      ────────────────────────────────────────── */
 
   function init() {
+    initNav();
+
+    if (window.SYMPOSIUM_META && window.SYMPOSIUM_META.registrationClosed) {
+      var formCard = el('registrationFormCard') || document.querySelector('.reg-form-card');
+      var closedCard = el('registrationClosedCard');
+      if (formCard) formCard.style.display = 'none';
+      if (closedCard) closedCard.style.display = 'block';
+      return;
+    }
+
     if (!window.SYMPOSIUM_EVENTS || !window.SYMPOSIUM_EVENTS.length) {
       console.error('[SYM2K26] window.SYMPOSIUM_EVENTS not found. ' +
                     'Ensure js/events.js is loaded before js/registration.js.');
@@ -1239,7 +1254,6 @@
     }
 
     checkAndShowSetupBanner();
-    initNav();
     buildEventSelector();
     setupRealTimeValidation();
 
